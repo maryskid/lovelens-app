@@ -27,7 +27,7 @@ export default function Header() {
   ];
 
   return (
-    <nav className="flex justify-between items-center px-4 py-4 md:px-10 md:py-6 relative bg-white shadow-sm">
+    <nav className="flex justify-between items-center px-6 py-4 md:px-10 md:py-6 relative bg-white shadow-sm">
       {/* Logo */}
       <Image
         className="cursor-pointer"
