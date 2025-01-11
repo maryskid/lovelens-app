@@ -25,9 +25,9 @@ const ProgressBar = ({ categories, currentCategoryIndex, answers }) => {
   };
 
   return (
-    <div className="w-full px-6 md:px-12 mt-6">
+    <div className="w-full lg:w-4/5 px-6 md:px-32 mt-6 mx-auto">
       {/* Desktop Progress Bar */}
-      <div className="hidden md:flex justify-between items-center gap-6">
+      <div className="hidden lg:flex justify-between items-center gap-6">
         {categories.map((category, index) => {
           const progress = calculateCategoryProgress(category);
           const isCurrent = index === currentCategoryIndex;
@@ -61,7 +61,7 @@ const ProgressBar = ({ categories, currentCategoryIndex, answers }) => {
       </div>
 
       {/* Mobile Progress Bar */}
-      <div className="md:hidden mt-4">
+      <div className="lg:hidden mt-4">
         <div className="relative w-full h-2 bg-gray-300 rounded-full">
           <div
             className="h-2 rounded-full bg-primary transition-all"

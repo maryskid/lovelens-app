@@ -8,7 +8,6 @@ import TestimonialsSection from "@/app/_components/TestimonialsSection";
 import ScienceSection from "@/app/_components/ScienceSection";
 import CallToActionSection from "@/app/_components/CallToActionSection";
 import FAQSection from "@/app/_components/FAQSection";
-import Footer from "@/app/_components/Footer";
 export default function Home() {
   return (
     <div>
