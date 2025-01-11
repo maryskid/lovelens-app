@@ -20,7 +20,6 @@ export default function Home() {
       <ScienceSection />
       <CallToActionSection />
       <FAQSection />
-      <Footer />
     </div>
   );
 }
