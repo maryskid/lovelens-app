@@ -130,7 +130,7 @@ const Page = () => {
           type="submit"
           className="w-full bg-primary text-white font-bold py-2 rounded-full hover:bg-orange-500 transition focus:outline-none"
         >
-          Submit
+          Start the quiz
         </button>
       </form>
 

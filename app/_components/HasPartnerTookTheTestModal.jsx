@@ -14,7 +14,7 @@ const HasPartnerTookTheTestModal = ({ isOpen, onClose }) => {
   };
 
   const handleYesClick = () => {
-    router.push('/code');
+    router.push('/enter-code');
     onClose();
   };
 
