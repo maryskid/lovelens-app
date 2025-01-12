@@ -32,7 +32,7 @@ const PersonalityTraits = ({ firstUser, secondUser }) => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 px-6 md:px-12 py-8">
       {/* Title Section */}
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center">

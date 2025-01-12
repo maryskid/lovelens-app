@@ -1,7 +1,7 @@
-"use client";
-
-import React from "react";
+ import React from "react";
 import PersonalityTraits from "@/app/_components/PersonalityTraits";
+import ReportHeader from "@/app/_components/ReportHeader";
+
 
 const Page = () => {
   const firstUser = {
@@ -146,8 +146,15 @@ const Page = () => {
     ],
   };
 
+  const alignmentPercentage = 78;
+
   return (
-    <div className="p-6 bg-gray-100">
+    <div className="bg-gray-100">
+      <ReportHeader
+        firstUser={firstUser}
+        secondUser={secondUser}
+        alignmentPercentage={alignmentPercentage}
+      />
       <PersonalityTraits firstUser={firstUser} secondUser={secondUser} />
     </div>
   );

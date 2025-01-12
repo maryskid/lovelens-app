@@ -1,6 +1,4 @@
-"use client";
-
-import React, { useState } from "react";
+import React from "react";
 import { recoleta } from "@/fonts/typo";
 
 const PersonalityCard = ({ person, isExpanded, onToggle, selectedTrait, onSelectTrait }) => {
