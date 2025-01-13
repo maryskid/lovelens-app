@@ -67,6 +67,7 @@ const firstUser = {
       description: "Sarah leans towards a cautious financial mindset.",
     },
   ],
+  growthOpportunity: "Consider embracing unplanned moments during weekends to make life more spontaneous and enjoyable.",
 };
 
 const secondUser = {
@@ -138,6 +139,11 @@ const secondUser = {
       description: "Thomas leans towards an opportunistic financial approach.",
     },
   ],
+  growthOpportunity: "Make it a habit to share your weekly schedule during Sunday dinners to foster better communication.",
 };
 
-export default { firstUser, secondUser };
+const together = {
+  growthOpportunity: "Set up a shared calendar to keep track of important events and stay organized together.",
+};
+
+export default { firstUser, secondUser, together };

@@ -3,79 +3,109 @@
 import React, { useState } from 'react';
 import { recoleta } from '@/fonts/typo';
 import { useRouter } from 'next/navigation';
+import { Lock, KeyRound, ArrowRight, AlertCircle, HelpCircle } from 'lucide-react';
 
 const Page = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({ code: '' });
   const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    setErrorMessage('');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
-    // Dummy validation for code
-    if (formData.code === '12345') {
-      router.push('/report'); // Redirect to the report page if code is valid
-    } else {
-      setErrorMessage('Invalid code. Please try again.');
-    }
+    setTimeout(() => {
+      if (formData.code === '12345') {
+        router.push('/report');
+      } else {
+        setErrorMessage('Invalid code. Please try again.');
+        setIsLoading(false);
+      }
+    }, 800);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#F8F4F2] via-[#FFF] to-[#F8F4F2] flex flex-col items-center px-6 py-20">
+    <div className="min-h-screen bg-gradient-to-b from-[#F8F4F2] via-[#FFF] to-[#F8F4F2] flex flex-col items-center px-6 py-20 relative overflow-x-hidden">
+      {/* Decorative Elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-orange-100 rounded-2xl opacity-20 blur-3xl -mr-48 -mt-48"></div>
+        <div className="absolute bottom-0 left-0 w-72 h-72 bg-orange-100 rounded-2xl opacity-20 blur-3xl -ml-36 -mb-36"></div>
+      </div>
+
       {/* Header Section */}
-      <div className="text-center mb-10">
-        <h1
-          className={`${recoleta.className} text-3xl md:text-4xl font-bold text-primary`}
-        >
-          Get Your Report
+      <div className="text-center mb-10 relative z-10">
+        <div className="inline-block p-3 bg-orange-100 rounded-xl mb-4 transform transition-transform hover:scale-105">
+          <Lock className="w-6 h-6 text-primary" />
+        </div>
+        <h1 className={`${recoleta.className} text-3xl md:text-4xl font-bold text-gray-800 mb-3`}>
+          Access Your Report
         </h1>
-        <p className="mt-2 text-gray-600 text-base lg:text-lg">
-          Enter your code to access your personalized <br className="hidden md:block" /> relationship report.
+        <p className="text-gray-600 text-base lg:text-lg max-w-md mx-auto">
+          Enter your unique code to unlock your personalized relationship insights
         </p>
       </div>
 
       {/* Form Section */}
-      <form onSubmit={handleSubmit} className="w-full max-w-md space-y-6">
-        <div>
-          <label
-            htmlFor="code"
-            className="block text-gray-700 text-sm font-medium mb-1"
-          >
-            Your Code
-          </label>
-          <input
-            type="text"
-            id="code"
-            name="code"
-            value={formData.code}
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-2 rounded-full border border-gray-300 focus:border-primary focus:ring-primary transition"
-            placeholder="Enter your unique code"
-          />
+      <div className="w-full max-w-md">
+        <div className="bg-white rounded-xl shadow-xl p-8 relative z-10 border border-gray-100">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label className="block text-gray-700 font-medium mb-2 flex items-center">
+                <KeyRound className="w-4 h-4 mr-2 text-gray-400" />
+                Your Access Code
+              </label>
+              <input
+                type="text"
+                name="code"
+                value={formData.code}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-3 rounded-2xl border border-gray-200 
+                  focus:border-primary focus:ring focus:ring-orange-100 
+                  transition-all duration-200 placeholder:text-gray-400"
+                placeholder="Enter your code"
+              />
+              {errorMessage && (
+                <div className="flex items-center mt-2 text-red-500 text-sm">
+                  <AlertCircle className="w-4 h-4 mr-1 flex-shrink-0" />
+                  <span>{errorMessage}</span>
+                </div>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-primary text-white font-bold py-3 rounded-2xl 
+                hover:bg-orange-500 transform hover:-translate-y-0.5 
+                transition-all duration-200 focus:outline-none
+                flex items-center justify-center space-x-2 
+                disabled:opacity-70 shadow-lg hover:shadow-xl"
+            >
+              <span>{isLoading ? 'Verifying...' : 'Access Report'}</span>
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </button>
+          </form>
         </div>
 
-        {errorMessage && (
-          <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
-        )}
-
-        <button
-          type="submit"
-          className="w-full bg-primary text-white font-bold py-2 rounded-full hover:bg-orange-500 transition focus:outline-none"
-        >
-          Get Report
-        </button>
-      </form>
-
-      {/* Disclaimer */}
-      <p className="text-center text-sm text-gray-500 mt-6">
-        Your code was provided to you at the end of the quiz. <br className="hidden md:block" /> If you’ve lost it, please contact support.
-      </p>
+        {/* Help Text */}
+        <div className="mt-6 text-center">
+          <div className="inline-flex items-center space-x-1 text-sm text-gray-600">
+            <p>Your code was provided at the end of the quiz.</p>
+            <button className="inline-flex items-center text-primary hover:text-orange-600 font-medium transition-colors ml-1 hover:underline">
+              <span>Need help?</span>
+              <HelpCircle className="w-4 h-4 ml-1" />
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

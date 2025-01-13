@@ -59,7 +59,7 @@ const FAQSection = () => {
                 className="flex justify-between items-center p-4 cursor-pointer"
                 onClick={() => toggleAccordion(index)}
               >
-                <h3 className={`${recoleta.className} font-semibold text-lg`}>
+                <h3 className={`${recoleta.className} font-semibold text-base md:text-lg`}>
                   {faq.question}
                 </h3>
                 <button

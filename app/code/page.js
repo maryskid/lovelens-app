@@ -69,7 +69,7 @@ const CodePage = ({ userName = "John", uniqueCode = "123456" }) => {
 
           <button
             onClick={handleEmailClick}
-            className="w-1/3 mx-auto bg-gradient-to-r from-primary to-orange-600 text-white py-4 rounded-full font-semibold shadow-md hover:from-orange-600 hover:to-orange-700 transition-all duration-200 flex items-center justify-center space-x-3"
+            className=" w-4/5 md:w-1/3 mx-auto bg-gradient-to-r from-primary to-orange-600 text-white py-4 rounded-xl font-semibold shadow-md hover:from-orange-600 hover:to-orange-700 transition-all duration-200 flex items-center justify-center space-x-3"
           >
             <Mail className="w-5 h-5" />
             <span>Share via Email</span>

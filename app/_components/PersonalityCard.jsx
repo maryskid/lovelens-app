@@ -1,5 +1,6 @@
 import React from "react";
 import { recoleta } from "@/fonts/typo";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 const PersonalityCard = ({ person, isExpanded, onToggle, selectedTrait, onSelectTrait }) => {
   const traitColors = {
@@ -14,51 +15,63 @@ const PersonalityCard = ({ person, isExpanded, onToggle, selectedTrait, onSelect
   };
 
   return (
-    <div className={`bg-white rounded-lg p-4 flex flex-col shadow-md ${isExpanded ? "h-auto" : "h-fit"}`}>
-      {/* Title, Description, and Avatar (Now on Top) */}
-      <div className="flex items-center mb-4">
-        <img
-          src={person.avatar}
-          alt={`${person.name}'s Avatar`}
-          className="w-16 h-16 rounded-full ring-2 ring-gray-200 mr-4"
-        />
-         <h3 className={`${recoleta.className} text-lg font-bold mb-2 text-gray-800`}>
+    <div className={`bg-white rounded-xl p-6 shadow-lg ${isExpanded ? "h-auto" : "h-fit"}`}>
+      {/* Header Section */}
+      <div className="flex items-center space-x-4 mb-6">
+        <div className="relative">
+          <img
+            src={person.avatar}
+            alt={`${person.name}'s Avatar`}
+            className="w-16 h-16 rounded-full object-cover ring-4 ring-gray-100"
+          />
+          <div className="absolute inset-0 rounded-full shadow-inner"></div>
+        </div>
+        <div>
+          <h3 className={`${recoleta.className} text-xl font-bold text-gray-800 mb-1`}>
             {person.name}'s Traits
           </h3>
-        <div>
-          <p className="text-sm text-gray-600 leading-relaxed">{person.description}</p>
+          <p className="text-sm text-gray-600">{person.description}</p>
         </div>
       </div>
 
-      {/* Selected Trait Description */}
-      <div className="bg-gray-50 rounded-lg p-4 mb-4">
-        <h3 className={`${recoleta.className} text-lg font-bold mb-2 text-gray-800`}>
-          {selectedTrait.name}
-        </h3>
-        <h4 className="text-xl font-bold mb-4" style={{ color: traitColors[selectedTrait.name] }}>
-          {selectedTrait.labels[
-            Object.keys(selectedTrait.labels).find(
-              (key) => selectedTrait.labels[key].isDominant
-            )
-          ]?.value}
-          %{" "}
-          {Object.keys(selectedTrait.labels).find(
-            (key) => selectedTrait.labels[key].isDominant
-          )}
-        </h4>
-        <p className="text-sm text-gray-600">{selectedTrait.description}</p>
+      {/* Selected Trait Card */}
+      <div className="bg-gray-50 rounded-xl p-6 mb-6 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-gray-100 to-transparent opacity-50 -mr-8 -mt-8 rounded-bl-full"></div>
+        <div className="relative">
+          <h3 className={`${recoleta.className} text-lg font-bold mb-3 text-gray-800`}>
+            {selectedTrait.name}
+          </h3>
+          <h4 
+            className="text-2xl font-bold mb-4 flex items-center" 
+            style={{ color: traitColors[selectedTrait.name] }}
+          >
+            {selectedTrait.labels[
+              Object.keys(selectedTrait.labels).find(
+                (key) => selectedTrait.labels[key].isDominant
+              )
+            ]?.value}
+            %{" "}
+            <span className="ml-2">
+              {Object.keys(selectedTrait.labels).find(
+                (key) => selectedTrait.labels[key].isDominant
+              )}
+            </span>
+          </h4>
+          <p className="text-gray-600 leading-relaxed">{selectedTrait.description}</p>
+        </div>
       </div>
 
       {/* Toggle Button */}
       <button
         onClick={onToggle}
-        className="mb-4 text-sm font-semibold text-gray-600 hover:underline"
+        className="flex items-center justify-center space-x-2 w-full mb-6 py-2 text-sm font-semibold text-gray-600 hover:text-gray-800 transition-colors duration-200"
       >
-        {isExpanded ? "Show Less" : "See More"}
+        <span>{isExpanded ? "Show Less" : "See More"}</span>
+        {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
       </button>
 
       {/* Progress Bars */}
-      <div className="flex-1">
+      <div className="space-y-4">
         {person.traits
           .slice(0, isExpanded ? person.traits.length : 3)
           .map((trait) => {
@@ -73,28 +86,36 @@ const PersonalityCard = ({ person, isExpanded, onToggle, selectedTrait, onSelect
               <div
                 key={trait.name}
                 onClick={() => onSelectTrait(trait)}
-                className={`mb-4 cursor-pointer p-2 rounded-lg transition-all duration-200 ${
-                  selectedTrait.name === trait.name ? "bg-opacity-20" : "hover:bg-gray-50"
-                }`}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = selectedTrait.name === trait.name
+                    ? `${traitColors[trait.name]}33`
+                    : `${traitColors[trait.name]}15`;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = selectedTrait.name === trait.name
+                    ? `${traitColors[trait.name]}33`
+                    : 'transparent';
+                }}
+                className={`p-3 rounded-lg transition-all duration-200 cursor-pointer`}
                 style={{
                   backgroundColor:
                     selectedTrait.name === trait.name
                       ? `${traitColors[trait.name]}33`
-                      : "transparent",
+                      : "transparent"
                 }}
               >
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-sm font-semibold text-gray-700">{trait.name}</span>
                   <span
-                    className="text-sm font-semibold"
+                    className="text-sm font-bold"
                     style={{ color: traitColors[trait.name] }}
                   >
                     {dominantLabel[1].value}% {dominantLabel[0]}
                   </span>
                 </div>
-                <div className="relative h-2 bg-gray-200 rounded-full">
+                <div className="relative h-2 bg-gray-100 rounded-full overflow-hidden">
                   <div
-                    className="absolute top-0 h-full rounded-full"
+                    className="absolute top-0 h-full rounded-full transition-all duration-300"
                     style={{
                       backgroundColor: traitColors[trait.name],
                       width: `${dominantLabel[1].value}%`,

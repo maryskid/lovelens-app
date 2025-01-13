@@ -59,7 +59,7 @@ const Question = ({ question, onAnswer, userAnswer, isLastQuestion }) => {
     <div className="py-10">
       {/* Question text */}
       <p
-        className={`${recoleta.className} text-lg md:text-xl font-medium text-center mb-6 md:mb-8 w-11/12 md:w-3/4 lg:w-2/3 mx-auto`}
+        className={`${recoleta.className} text-lg md:text-2xl font-medium text-center mb-6 md:mb-8 w-11/12 md:w-3/4 lg:w-2/3 mx-auto`}
       >
         {question.text}
       </p>

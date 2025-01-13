@@ -43,7 +43,7 @@ function Hero() {
             <div className="flex justify-center">
               <Button
                 onClick={handleOpenModal}
-                className="bg-primary text-white rounded-full px-8 py-6 md:px-10 md:py-8 md:text-lg font-bold hover:bg-primary/90"
+                className="bg-primary text-white rounded-xl px-8 py-6 md:px-10 md:py-8 md:text-lg font-bold hover:bg-primary/90"
               >
                 Take the Test - Free <ArrowRight size={24} />
               </Button>

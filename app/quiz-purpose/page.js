@@ -113,7 +113,7 @@ const Page = () => {
       {/* Action Button */}
       <div className="text-center mt-12">
         <button
-          className={`bg-orange-500 text-white px-8 py-3 rounded-full font-semibold shadow-md hover:bg-orange-600 transition-all duration-200 ${
+          className={`bg-orange-500 text-white px-8 py-3 rounded-xl font-semibold shadow-md hover:bg-orange-600 transition-all duration-200 ${
             !selectedReason ? 'opacity-50 cursor-not-allowed' : ''
           }`}
           onClick={() => selectedReason && console.log("Continuing with reason:", selectedReason)}

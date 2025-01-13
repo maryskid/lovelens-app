@@ -124,7 +124,7 @@ const Category = ({
       {/* Navigation Buttons */}
       <div className="flex justify-between mt-6 md:w-4/5 mx-auto md:px-16 lg:px-20">
         <button
-          className="bg-gray-300 text-gray-600 px-4 py-2 rounded-full"
+          className="bg-gray-300 text-gray-600 px-4 py-2 rounded-xl"
           onClick={onPrevious}
           disabled={category.id === 1}
         >
@@ -135,7 +135,7 @@ const Category = ({
             category.questions.every((q) => answers[q.id] !== undefined)
               ? "bg-primary"
               : "bg-gray-300"
-          } text-white px-4 py-2 rounded-full`}
+          } text-white px-4 py-2 rounded-xl`}
           onClick={isLastCategory ? onNext : handleNextCategory}
           disabled={!category.questions.every((q) => answers[q.id] !== undefined)}
         >
