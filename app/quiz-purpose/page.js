@@ -21,7 +21,7 @@ const Page = () => {
       color: "#10B981", // green
     },
     {
-      icon: "/communication.png",
+      icon: "/chat.png",
       title: "Better Communication",
       description: "I want to improve how we communicate",
       color: "#3B82F6", // blue
@@ -45,7 +45,7 @@ const Page = () => {
       color: "#06B6D4", // teal
     },
     {
-      icon: "/therapy.png",
+      icon: "/broken-heart.png",
       title: "Seeking Help",
       description: "Considering professional relationship support",
       color: "#EF4444", // red

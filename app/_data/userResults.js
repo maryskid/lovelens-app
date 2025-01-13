@@ -19,7 +19,7 @@ const userResults = [
     name: "Intimacy",
     subtitle: "Emotional and physical connection patterns",
     alignmentPercentage: 60,
-    icon: "/intimacy.png",
+    icon: "/compatibility.png",
     alignmentText: "Your emotional connection is strong but could benefit from more physical time together.",
     growthOpportunity: "Plan dedicated moments for deeper connection.",
   },

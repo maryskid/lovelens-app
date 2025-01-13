@@ -22,7 +22,7 @@ const CategoryCard = ({
           <img
             src={icon}
             alt={`${name} icon`}
-            className="w-12 h-12 flex-shrink-0"
+            className="w-14 h-14 flex-shrink-0"
           />
           <div className="flex-1">
             <h3
