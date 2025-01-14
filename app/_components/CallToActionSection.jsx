@@ -27,9 +27,9 @@ const CallToActionSection = () => {
           <div className="flex justify-center">
             <button 
               onClick={handleOpenModal}
-              className="bg-white text-primary rounded-xl px-6 py-3 text-sm md:text-base font-bold hover:bg-gray-100 transition flex items-center gap-2"
+              className="bg-white text-primary rounded-full px-6 py-3 text-sm md:text-base font-bold hover:bg-gray-100 transition flex items-center gap-2"
             >
-              Take the Test - Free <ArrowRight size={24} />
+              Start Free Assessment <ArrowRight size={24} />
             </button>
           </div>
           {/* Features */}

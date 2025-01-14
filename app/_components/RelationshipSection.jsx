@@ -23,7 +23,7 @@ const RelationshipSection = () => {
             {/* Heading with Sparkles */}
             <div className="relative">
               <h3
-                className={`${guthenBloots.className} text-xl lg:text-2xl mb-2`}
+                className={`${guthenBloots.className} text-xl text-primary lg:text-2xl mb-2`}
               >
                 Bridging Relationship Gaps
               </h3>

@@ -1,11 +1,18 @@
 import Image from "next/image";
 import { guthenBloots, recoleta } from "@/fonts/typo";
+import { Brain, ChevronRight } from "lucide-react";
 
 function ScienceSection() {
   return (
-    <div className="relative bg-white py-16 px-6 md:px-12">
-      <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-        {/* Image Section */}
+    <div className="relative bg-gradient-to-b from-white to-white/50 py-20 px-6 md:px-12 overflow-hidden">
+      {/* Decorative Background */}
+      <div className="absolute inset-0">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -mr-48 -mt-48"></div>
+        <div className="absolute bottom-0 left-0 w-72 h-72 bg-primary/5 rounded-full blur-3xl -ml-36 -mb-36"></div>
+      </div>
+
+      <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-20 items-center relative">
+        {/* Image Section - Kept Exactly the Same */}
         <div className="relative">
           {/* Main Image */}
           <Image
@@ -31,53 +38,59 @@ function ScienceSection() {
           </div>
         </div>
 
-        {/* Text Section */}
-        <div className="relative text-center md:text-left">
-          {/* Emoji and Curved Arrows */}
-          <div className="relative flex items-center justify-center md:justify-start mb-4">
-            {/* Emoji Image */}
-            <Image
-              src="/emojis.png"
-              alt="Two emojis representing science"
-              width={28}
-              height={28}
-              className="inline-block mr-4"
-            />
-            {/* Curved Arrows */}
+        {/* Enhanced Text Section */}
+        <div className="relative">
+          {/* Header with Icon */}
+          <div className="flex items-center space-x-4 mb-6">
             <div className="relative">
-              <Image
-                src="/curvy-arrow-up.png"
-                alt="Curvy arrow pointing up"
-                width={40}
-                height={40}
-                className="absolute top-[-30px] right-[-10px] md:top-[-40px] md:right-[-20px] rotate-[180deg]"
-              />
-              <Image
-                src="/curvy-arrow-down.png"
-                alt="Curvy arrow pointing down"
-                width={40}
-                height={40}
-                className="absolute bottom-[-30px] left-[10px] md:bottom-[-40px] md:left-[20px] rotate-[-150deg]"
-              />
+              {/* Emoji and Arrows - Kept Original Images */}
+              <div className="relative flex items-center">
+                <Image
+                  src="/emojis.png"
+                  alt="Two emojis representing science"
+                  width={28}
+                  height={28}
+                  className="inline-block mr-4"
+                />
+                {/* Curved Arrows */}
+                <div className="relative">
+                  <Image
+                    src="/curvy-arrow-up.png"
+                    alt="Curvy arrow pointing up"
+                    width={40}
+                    height={40}
+                    className="absolute top-[-30px] right-[-10px] md:top-[-40px] md:right-[-20px] rotate-[180deg]"
+                  />
+                  <Image
+                    src="/curvy-arrow-down.png"
+                    alt="Curvy arrow pointing down"
+                    width={40}
+                    height={40}
+                    className="absolute bottom-[-30px] left-[10px] md:bottom-[-40px] md:left-[20px] rotate-[-150deg]"
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Text Content */}
-          <p
-            className={`${guthenBloots.className} text-lg md:text-xl lg:text-2xl mb-4 antialiased`}
-          >
-            Science-backed tools for deeper understanding
-          </p>
-          <h2
-            className={`${recoleta.className} text-2xl lg:text-3xl font-bold mb-6`}
-          >
-            Backed by Science
-          </h2>
-          <p className="text-gray-600 text-sm md:text-base lg:text-lg mb-4">
-            Developed with relationship therapists and psychologists, our
-            assessment uses proven frameworks for understanding relationship
-            dynamics and attachment styles.
-          </p>
+          {/* Main Content */}
+          <div className="space-y-6">
+            <p className={`${guthenBloots.className} text-xl md:text-2xl text-primary/80`}>
+              Science-backed tools for deeper understanding
+            </p>
+            
+            <h2 className={`${recoleta.className} text-3xl md:text-4xl font-bold text-gray-800`}>
+              Backed by Science
+            </h2>
+
+            <div className="space-y-6">
+              <p className="text-gray-600 text-lg leading-relaxed">
+                Developed with relationship therapists and psychologists, our
+                assessment uses proven frameworks for understanding relationship
+                dynamics and attachment styles.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
