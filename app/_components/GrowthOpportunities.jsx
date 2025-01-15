@@ -1,7 +1,7 @@
 import React from "react";
 import { recoleta } from "@/fonts/typo";
 import { Sprout, Users, ArrowUp } from "lucide-react";
-
+import Image from "next/image";
 const GrowthOpportunities = ({ firstUser, secondUser, togetherOpportunity }) => {
   return (
     <div className="space-y-6 px-6 md:px-24 py-8">
@@ -21,7 +21,13 @@ const GrowthOpportunities = ({ firstUser, secondUser, togetherOpportunity }) => 
         <div className="bg-white shadow-md rounded-lg p-6 relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-24 h-24 bg-orange-50 rounded-bl-full opacity-50 -mr-8 -mt-8"></div>
           <div className="relative">
-            <Sprout className="w-6 h-6 text-orange-500 mb-3" />
+            <Image
+              src='/femenine.png'
+              alt='femenine icon'
+              width={60}
+              height={60}
+              className="w-6 h-6"
+            />
             <h3 className="text-lg font-semibold text-orange-500 mb-2">For {firstUser.name}</h3>
             <p className="text-gray-700">{firstUser.growthOpportunity}</p>
           </div>
@@ -31,7 +37,13 @@ const GrowthOpportunities = ({ firstUser, secondUser, togetherOpportunity }) => 
         <div className="bg-white shadow-md rounded-lg p-6 relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-24 h-24 bg-orange-50 rounded-bl-full opacity-50 -mr-8 -mt-8"></div>
           <div className="relative">
-            <ArrowUp className="w-6 h-6 text-orange-500 mb-3" />
+            <Image
+              src='/masculine.png'
+              alt='masculine icon'
+              width={60}
+              height={60}
+              className="w-6 h-6"
+            />
             <h3 className="text-lg font-semibold text-orange-500 mb-2">For {secondUser.name}</h3>
             <p className="text-gray-700">{secondUser.growthOpportunity}</p>
           </div>
@@ -41,7 +53,13 @@ const GrowthOpportunities = ({ firstUser, secondUser, togetherOpportunity }) => 
         <div className="bg-white shadow-md rounded-lg p-6 relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-24 h-24 bg-orange-50 rounded-bl-full opacity-50 -mr-8 -mt-8"></div>
           <div className="relative">
-            <Users className="w-6 h-6 text-orange-500 mb-3" />
+            <Image
+              src='/romantic-couple.png'
+              alt='romantic couple icon'
+              width={60}
+              height={60}
+              className="w-8 h-8"
+            />
             <h3 className="text-lg font-semibold text-orange-500 mb-2">Together</h3>
             <p className="text-gray-700">{togetherOpportunity}</p>
           </div>
