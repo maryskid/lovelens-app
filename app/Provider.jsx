@@ -3,11 +3,15 @@ import Footer from "@/app/_components/Footer";
 
 export default function Provider({ children }) {
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
+      {/* Header stays at the top */}
       <Header />
-      {children}
+
+      {/* Main content fills available space */}
+      <main className="flex-grow">{children}</main>
+
+      {/* Footer stays at the bottom */}
       <Footer />
     </div>
   );
 }
-
