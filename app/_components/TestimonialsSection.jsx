@@ -33,22 +33,18 @@ const TestimonialsSection = () => {
     },
     slideChanged(slider) {
       setCurrentSlide(slider.track.details.rel);
-      console.log("Slide changed to:", slider.track.details.rel);
     },
     created() {
-      console.log("KeenSlider instance created:", instanceRef.current);
       setLoaded(true);
     },
   });
 
   useEffect(() => {
     if (!loaded || !instanceRef.current) {
-      console.log("Slider not ready yet.");
       return;
     }
 
     const interval = setInterval(() => {
-      console.log("Moving to next slide");
       instanceRef.current?.next();
     }, 6000);
 

@@ -1,6 +1,6 @@
 import "./globals.css";
-import Provider from "@/app/Provider";
 import { modernEra } from "@/fonts/typo";
+import { UserProvider } from "@/context/UserContext";
 
 
 
@@ -15,9 +15,9 @@ export default function RootLayout({ children }) {
       <body
         className={`${modernEra.className}  antialiased`}
       >
-        <Provider>
+        <UserProvider>
             {children}
-        </Provider>
+        </UserProvider>
       </body>
     </html>
   );

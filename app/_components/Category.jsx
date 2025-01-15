@@ -6,7 +6,7 @@ import { guthenBloots, recoleta } from "@/fonts/typo";
 
 const Category = ({
   category,
-  onNext,
+  onNextOrSubmit,
   onPrevious,
   isLastCategory,
   answers,
@@ -42,8 +42,8 @@ const Category = ({
 
   // Handle moving to the next category
   const handleNextCategory = () => {
-    // Call onNext first to change the questions
-    onNext();
+    // Call onNextOrSubmit first to change the questions
+    onNextOrSubmit();
     
     // Immediately reset the question index and scroll
     setCurrentQuestionIndex(0);
@@ -136,7 +136,7 @@ const Category = ({
               ? "bg-primary"
               : "bg-gray-300"
           } text-white px-4 py-2 rounded-xl`}
-          onClick={isLastCategory ? onNext : handleNextCategory}
+          onClick={isLastCategory ? onNextOrSubmit : handleNextCategory}
           disabled={!category.questions.every((q) => answers[q.id] !== undefined)}
         >
           {isLastCategory ? "Submit Answers" : "Next"}

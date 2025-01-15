@@ -1,13 +1,19 @@
-'use client';
+"use client";
 
 import React, { useState } from 'react';
 import { recoleta } from '@/fonts/typo';
 import { useRouter } from 'next/navigation';
 import { UserRound, Mail, ChevronDown, HeartHandshake, ArrowRight } from 'lucide-react';
+import { useUser } from '@/context/UserContext';
 
 const Page = () => {
+  const { setUserData } = useUser();
   const router = useRouter();
-  const [formData, setFormData] = useState({ firstName: '', email: '', gender: '' });
+  const [formData, setFormData] = useState({ 
+    firstName: '', 
+    email: '', 
+    gender: ''
+  });
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -19,8 +25,15 @@ const Page = () => {
     e.preventDefault();
     setIsLoading(true);
     
+    const userData = {
+      ...formData,
+      timestamp: new Date().toISOString() // Add a timestamp
+    };
+
+    setUserData(userData);
+    
     setTimeout(() => {
-      router.push('/quiz');
+      router.push('/quiz'); // backend logic
     }, 500);
   };
 

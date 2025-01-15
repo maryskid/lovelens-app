@@ -1,17 +1,24 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { recoleta } from '@/fonts/typo';
-import { useRouter } from 'next/navigation';
-import { UserRound, Mail, Key, ChevronDown, HeartHandshake, ArrowRight } from 'lucide-react';
-import CodeStatusModal from '@/app/_components/CodeStatusModal';
+import React, { useState } from "react";
+import { recoleta } from "@/fonts/typo";
+import { useRouter } from "next/navigation";
+import { UserRound, Mail, Key, ChevronDown, HeartHandshake, ArrowRight } from "lucide-react";
+import CodeStatusModal from "@/app/_components/CodeStatusModal";
+import { useUser } from "@/context/UserContext";
 
 const Page = () => {
+  const { setUserData } = useUser();
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
   const [status, setStatus] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({ firstName: '', email: '', gender: '', code: '' });
+  const [formData, setFormData] = useState({ 
+    firstName: '', 
+    email: '', 
+    gender: '', 
+    code: ''
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,8 +29,15 @@ const Page = () => {
     e.preventDefault();
     setIsLoading(true);
 
+    const userData = {
+      ...formData,
+      timestamp: new Date().toISOString(), // Add timestamp
+    };
+
+    setUserData(userData);
+
     setTimeout(() => {
-      if (formData.code === '12345') {
+      if (formData.code === '12345') { // Replace with your validation logic from backend
         router.push('/quiz');
       } else {
         setStatus('wrong');
@@ -33,8 +47,10 @@ const Page = () => {
     }, 800);
   };
 
+  // Function to close the modal
   const closeModal = () => {
     setModalOpen(false);
+    setStatus(null); // Reset status when closing the modal
   };
 
   return (
@@ -60,12 +76,14 @@ const Page = () => {
 
       {/* Form Section */}
       <div className="w-full max-w-md">
-        <form onSubmit={handleSubmit} 
+        <form
+          onSubmit={handleSubmit}
           className="space-y-6 bg-white rounded-xl shadow-xl p-8 relative z-10 
-            border border-gray-100 backdrop-blur-sm backdrop-saturate-150">
+            border border-gray-100 backdrop-blur-sm backdrop-saturate-150"
+        >
           {/* First Name */}
           <div>
-            <label className="block text-gray-700 font-medium mb-2 flex items-center">
+            <label className="block text-gray-700 font-medium mb-2 md:flex items-center">
               <UserRound className="w-4 h-4 mr-2 text-gray-400" />
               First Name
             </label>
@@ -84,7 +102,7 @@ const Page = () => {
 
           {/* Email */}
           <div>
-            <label className="block text-gray-700 font-medium mb-2 flex items-center">
+            <label className="block text-gray-700 font-medium mb-2 md:flex items-center">
               <Mail className="w-4 h-4 mr-2 text-gray-400" />
               Email Address
             </label>
@@ -103,7 +121,7 @@ const Page = () => {
 
           {/* Gender */}
           <div>
-            <label className="block text-gray-700 font-medium mb-2 flex items-center">
+            <label className="block text-gray-700 font-medium mb-2 md:flex items-center">
               <UserRound className="w-4 h-4 mr-2 text-gray-400" />
               Gender
             </label>
@@ -128,7 +146,7 @@ const Page = () => {
 
           {/* Partner's Code */}
           <div>
-            <label className="block text-gray-700 font-medium mb-2 flex items-center">
+            <label className="block text-gray-700 font-medium mb-2 md:flex items-center">
               <Key className="w-4 h-4 mr-2 text-gray-400" />
               Partner's Code
             </label>
