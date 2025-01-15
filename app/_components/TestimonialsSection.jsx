@@ -33,18 +33,27 @@ const TestimonialsSection = () => {
     },
     slideChanged(slider) {
       setCurrentSlide(slider.track.details.rel);
+      console.log("Slide changed to:", slider.track.details.rel);
     },
     created() {
+      console.log("KeenSlider instance created:", instanceRef.current);
       setLoaded(true);
     },
   });
 
   useEffect(() => {
+    if (!loaded || !instanceRef.current) {
+      console.log("Slider not ready yet.");
+      return;
+    }
+
     const interval = setInterval(() => {
+      console.log("Moving to next slide");
       instanceRef.current?.next();
     }, 6000);
+
     return () => clearInterval(interval);
-  }, [instanceRef]);
+  }, [loaded, instanceRef]);
 
   const testimonials = [
     {
@@ -103,6 +112,7 @@ const TestimonialsSection = () => {
               onClick={() => instanceRef.current?.prev()}
               className="p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow
                 text-gray-600 hover:text-primary"
+              aria-label="Previous slide"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
@@ -110,6 +120,7 @@ const TestimonialsSection = () => {
               onClick={() => instanceRef.current?.next()}
               className="p-2 rounded-full bg-white shadow-md hover:shadow-lg transition-shadow
                 text-gray-600 hover:text-primary"
+              aria-label="Next slide"
             >
               <ChevronRight className="w-5 h-5" />
             </button>
@@ -160,6 +171,7 @@ const TestimonialsSection = () => {
                 ${currentSlide === idx 
                   ? "bg-primary w-6" 
                   : "bg-gray-300 hover:bg-gray-400"}`}
+              aria-label={`Go to slide ${idx + 1}`}
             />
           ))}
         </div>
