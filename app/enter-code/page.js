@@ -25,26 +25,41 @@ const Page = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
     const userData = {
-      ...formData,
-      timestamp: new Date().toISOString(), // Add timestamp
+      firstName: formData.firstName,
+      email: formData.email,
+      gender: formData.gender,
+      code: formData.code,
     };
 
-    setUserData(userData);
+    try {
+      // Validate the code with the backend
+      const response = await fetch("/api/validate-code", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: formData.code.trim().toUpperCase() }), // Trim the code to remove any whitespace and convert to uppercase to match the generated code
+      });
 
-    setTimeout(() => {
-      if (formData.code === '12345') { // Replace with your validation logic from backend
-        router.push('/quiz');
+      const result = await response.json();
+
+      if (response.ok && result.valid) {
+        setUserData(userData); // Store user data in context
+        router.push("/quiz"); // Redirect to the quiz page
       } else {
-        setStatus('wrong');
+        setStatus("wrong");
         setModalOpen(true);
-        setIsLoading(false);
       }
-    }, 800);
+    } catch (error) {
+      console.error("Error validating code:", error);
+      setStatus("error");
+      setModalOpen(true);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Function to close the modal

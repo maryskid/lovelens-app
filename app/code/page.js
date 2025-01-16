@@ -1,11 +1,16 @@
 "use client";
 
 import React, { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { recoleta } from "@/fonts/typo";
 import { Mail, Copy, Check, Sparkles, Share2, ArrowRight } from "lucide-react";
 
-const CodePage = ({ userName = "John", uniqueCode = "123456" }) => {
+const Page = () => {
   const [copied, setCopied] = useState(false);
+  const searchParams = useSearchParams();
+  const uniqueCode = searchParams.get("uniqueCode") || "";
+  const firstName = searchParams.get("firstName") || "";
+
 
   const messagePreview = `Hey! I just completed the LoveLens relationship quiz and would love to see how our perspectives align. Here's my code to take your part: ${uniqueCode}`;
 
@@ -31,7 +36,7 @@ const CodePage = ({ userName = "John", uniqueCode = "123456" }) => {
             <Sparkles className="w-12 h-12 text-orange-500" />
           </div>
           <h1 className={`${recoleta.className} text-4xl md:text-5xl font-bold text-gray-800 mb-4`}>
-            Amazing work, {userName}! 🎉
+            Amazing work, {firstName}! 🎉
           </h1>
           <p className="text-lg md:text-xl text-gray-600">
             You've taken the first step towards deeper understanding.
@@ -112,4 +117,4 @@ const CodePage = ({ userName = "John", uniqueCode = "123456" }) => {
   );
 };
 
-export default CodePage;
+export default Page;

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import QuizHeader from "@/app/_components/QuizHeader";
 import ProgressBar from "@/app/_components/ProgressBar";
 import Category from "@/app/_components/Category";
@@ -11,108 +11,148 @@ import { useUser } from "@/context/UserContext";
 import { useRouter } from "next/navigation";
 
 const Page = () => {
-  const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0); // Current category being displayed
-  const [answers, setAnswers] = useState({}); // User's answers to the quiz questions
-  const [categories, setCategories] = useState([]); // Quiz categories and their associated questions
-  const { userData, getCookieData } = useUser(); // Access user data and cookie retrieval method
-  const router = useRouter(); // For navigation and redirection
+  // State management for quiz progress and data
+  const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
+  const [answers, setAnswers] = useState({});
+  const [categories, setCategories] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Validate user data to ensure only authenticated/valid users access the quiz page
-  const validateUserData = () => {
+  // User and routing context
+  const { userData, getCookieData } = useUser();
+  const router = useRouter();
+
+  // Validate user data (checks session and cookie)
+  const validateUserData = useCallback(() => {
     const cookieData = getCookieData();
 
     if (!userData && !cookieData) {
-      // Case 1: No `userData` or cookie - redirect to the home page
-      router.replace("/");
+      router.replace("/"); // Redirect unauthenticated users
       return null;
     }
 
-    if (userData && !cookieData) {
-      // Case 2: `userData` exists but no cookie - uncommon case, prioritize `userData`
-      return userData;
-    }
+    return userData || cookieData; // Return the most reliable user data
+  }, [userData, getCookieData, router]);
 
-    if (!userData && cookieData) {
-      // Case 3: Cookie exists but no `userData` (e.g., page refresh) - use cookie data
-      return cookieData;
-    }
-
-    // Case 4: Both `userData` and cookie exist - return either (they should be identical)
-    return userData;
-  };
-
-  // Fetch quiz data when the component mounts and validate user data
+  // Fetch quiz data and validate the user on component mount
   useEffect(() => {
     const userInfo = validateUserData();
-    if (!userInfo) return; // If validation fails, user is redirected
+    if (!userInfo) return;
+
+    console.log("User Info:", userInfo);
 
     const fetchData = async () => {
       try {
-        const data = await fetchCategoriesWithQuestions(); // Fetch categories and questions from the backend
-        setCategories(data); // Update categories state
+        const data = await fetchCategoriesWithQuestions();
+        setCategories(data); // Populate categories with fetched data
       } catch (error) {
-        console.error("Error fetching quiz questions:", error); // Log any errors
+        console.error("Error fetching quiz categories:", error);
       }
     };
 
     fetchData();
-  }, []);
+  }, [validateUserData]);
 
-  // Handle advancing to the next category or submitting the quiz
-  const handleNextOrSubmit = () => {
+  // Advance to the next category or submit the quiz
+  const handleNextOrSubmit = async () => {
     if (currentCategoryIndex < categories.length - 1) {
-      // Move to the next category if there are more categories
-      setCurrentCategoryIndex(currentCategoryIndex + 1);
+      setCurrentCategoryIndex((prevIndex) => prevIndex + 1);
     } else {
       const userInfo = validateUserData();
       if (!userInfo) {
-        router.replace("/"); // Redirect if user validation fails
+        router.replace("/");
         return;
       }
 
-      // Prepare data for backend submission
-      const submissionData = {
-        userData: userInfo,
-        answers: answers,
-      };
-
-      console.log("Submit Data:", submissionData);
-      // Add backend submission logic here
+      const submissionData = { userData: userInfo, answers };
+      await handleSubmit(submissionData);
     }
   };
 
-  // Handle returning to the previous category
+  // Go back to the previous category
   const handlePrevious = () => {
     if (currentCategoryIndex > 0) {
-      setCurrentCategoryIndex(currentCategoryIndex - 1);
+      setCurrentCategoryIndex((prevIndex) => prevIndex - 1);
     }
   };
 
-  // Show a loading indicator if categories are not yet loaded
+  // Submit the quiz responses to the backend
+  const handleSubmit = async (submissionData) => {
+    setIsSubmitting(true);
+
+    const payload = {
+      first_name: submissionData.userData.firstName,
+      email: submissionData.userData.email,
+      gender: submissionData.userData.gender,
+      answers: Object.entries(submissionData.answers).map(([questionId, answer]) => ({
+        questionId,
+        answer,
+      })),
+    };
+
+    try {
+      const endpoint = submissionData.userData.code
+        ? "/api/join-quiz"
+        : "/api/create-quiz"; // Dynamically select the endpoint
+
+      // Add the session code to the payload for join-quiz
+      if (submissionData.userData.code) {
+        payload.code = submissionData.userData.code;
+      }
+
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+
+        if (!submissionData.userData.code) {
+          // Redirect to the Code Page for initiators
+          router.push(`/code?uniqueCode=${data.sessionUniqueCode}&firstName=${encodeURIComponent(submissionData.userData.firstName)}`);
+        } else {
+          // Redirect to the quiz completion page for partners
+          router.push("/quiz-complete");
+        }
+     
+      } else {
+        console.error("Error submitting quiz:", response.statusText);
+        alert("There was an issue submitting your quiz. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error submitting quiz:", error);
+      alert("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Show loading indicator while fetching categories
   if (!categories || categories.length === 0) {
     return <Loading />;
   }
 
   return (
     <ProtectedQuizRoute>
-      {/* Quiz Header */}
+      {/* Header for the quiz */}
       <QuizHeader />
 
-      {/* Progress Bar */}
+      {/* Progress bar for quiz progress */}
       <ProgressBar
         categories={categories}
         answers={answers}
         currentCategoryIndex={currentCategoryIndex}
       />
 
-      {/* Quiz Category */}
+      {/* Render the current category of questions */}
       <Category
-        category={categories[currentCategoryIndex]} // Current category to display
-        onNextOrSubmit={handleNextOrSubmit} // Handler for advancing to the next category
-        onPrevious={handlePrevious} // Handler for returning to the previous category
-        isLastCategory={currentCategoryIndex === categories.length - 1} // Check if this is the last category
-        answers={answers} // Current user answers
-        setAnswers={setAnswers} // Update answers
+        category={categories[currentCategoryIndex]}
+        onNextOrSubmit={handleNextOrSubmit}
+        onPrevious={handlePrevious}
+        isLastCategory={currentCategoryIndex === categories.length - 1}
+        answers={answers}
+        setAnswers={setAnswers}
       />
     </ProtectedQuizRoute>
   );
