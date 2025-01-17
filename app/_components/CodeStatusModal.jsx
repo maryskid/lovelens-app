@@ -42,22 +42,8 @@ const CodeStatusModal = ({ isOpen, onClose, status, code }) => {
           link: `/get-report?code=${code}`, // Redirect to the report page
           icon: <CheckCircle className="w-8 h-8 text-green-600" />,
         };
-      case "error":
-        return {
-          title: "Something went wrong",
-          description: "We're sorry, but an error occurred while processing your request. Please try again later.",
-          tips: [],
-          buttonText: "Try Again",
-          icon: <AlertCircle className="w-8 h-8 text-red-600" />,
-        };
       default:
-        return  {
-          title: "Something went wrong",
-          description: "We're sorry, but an error occurred while processing your request. Please try again later.",
-          tips: [],
-          buttonText: "Try Again",
-          icon: <AlertCircle className="w-8 h-8 text-red-600" />,
-        };
+        return null;
     }
   };
 

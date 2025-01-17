@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { generateUniqueCode } from "@/utils/codeGenerator";
 import supabase from "@/configs/supabaseClient";
+import { calculateTraitsForUser } from "@/utils/traitProcessor";
+
 
 export async function POST(req) {
   try {
@@ -51,6 +53,9 @@ export async function POST(req) {
       console.error("Quiz responses error:", responsesError);
       throw new Error("Failed to store quiz responses.");
     }
+
+    // Trigger trait calculation to generate the user's traits and store them in the database
+    await calculateTraitsForUser(session.id, profile.id);
 
     // Return the session unique code
     return NextResponse.json({ sessionUniqueCode });

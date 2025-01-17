@@ -136,7 +136,7 @@ const secondUser = {
         Cautious: { value: 35 },
         Opportunistic: { value: 65, isDominant: true },
       },
-      description: "Thomas leans towards an opportunistic financial approach.",
+      description: "Your financial mindset is strongly opportunistic, a style that thrives on seizing opportunities and embracing growth. This perspective brings a dynamic energy to your romantic relationship, often fostering excitement and the potential for shared adventures. It can encourage your partnership to dream big and take bold steps, creating a future rich with possibilities. Your strengths lie in your clarity and decisiveness, as reflected in your responses about prioritizing growth and optimizing spending. However, your preferences may sometimes clash with a partner who values stability or a more cautious approach. Balancing these tendencies is key to ensuring both partners feel secure and aligned in financial decisions.To nurture harmony, consider combining your opportunistic outlook with small gestures of financial reassurance. For example, setting aside a joint savings fund for shared goals while maintaining room for your adventurous investments can honor both styles. Additionally, open, proactive discussions about large purchases or debt management will foster mutual trust and understanding. Your natural style is a gift in any partnership, infusing excitement and ambition into shared dreams. Embrace this while remaining attuned to your partner's needs, knowing that your ability to inspire and lead can strengthen the foundation of your relationship.",
     },
   ],
   growthOpportunity: "Make it a habit to share your weekly schedule during Sunday dinners to foster better communication.",
