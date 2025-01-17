@@ -11,14 +11,16 @@ const Page = () => {
   const { setUserData } = useUser();
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
-  const [status, setStatus] = useState(null);
+  const [status, setStatus] = useState(null); // Tracks the modal status
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({ 
-    firstName: '', 
-    email: '', 
-    gender: '', 
+  const [formData, setFormData] = useState({
+    firstName: '',
+    email: '',
+    gender: '',
     code: ''
   });
+
+  const code = formData.code.trim().replace(/\s*-\s*/g, "-").toUpperCase(); // Normalize the code
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,32 +31,27 @@ const Page = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    const code = formData.code.trim().replace(/\s*-\s*/g, "-").toUpperCase(); // Trim the code to remove any whitespace and convert to uppercase to match the generated code
-
-    const userData = {
-      firstName: formData.firstName,
-      email: formData.email,
-      gender: formData.gender,
-      code
-    };
-
     try {
-      // Validate the code with the backend
       const response = await fetch("/api/validate-code", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code }), 
+        body: JSON.stringify({ code }),
       });
 
       const result = await response.json();
 
       if (response.ok && result.valid) {
-        setUserData(userData); // Store user data in context
-        router.push("/quiz"); // Redirect to the quiz page
+        if (result.code === "COMPLETED") {
+          setStatus("completed"); // Trigger completed modal
+        } else {
+          setUserData({ ...formData, code: code }); // Save user data
+          router.push("/quiz"); // Redirect to the quiz
+        }
       } else {
-        setStatus("wrong");
-        setModalOpen(true);
+        setStatus("wrong"); // Trigger wrong code modal
       }
+
+      setModalOpen(true);
     } catch (error) {
       console.error("Error validating code:", error);
       setStatus("error");
@@ -64,10 +61,9 @@ const Page = () => {
     }
   };
 
-  // Function to close the modal
   const closeModal = () => {
     setModalOpen(false);
-    setStatus(null); // Reset status when closing the modal
+    setStatus(null);
   };
 
   return (
@@ -189,7 +185,7 @@ const Page = () => {
               flex items-center justify-center space-x-2 
               disabled:opacity-70 shadow-lg hover:shadow-xl mt-8"
           >
-            <span>{isLoading ? 'Starting...' : 'Start the Quiz'}</span>
+            <span>{isLoading ? "Starting..." : "Start the Quiz"}</span>
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
           </button>
         </form>
@@ -201,7 +197,12 @@ const Page = () => {
       </div>
 
       {/* Modal */}
-      <CodeStatusModal isOpen={modalOpen} onClose={closeModal} status={status} />
+      <CodeStatusModal
+        isOpen={modalOpen}
+        onClose={closeModal}
+        status={status}
+        code={code}
+      />
     </div>
   );
 };

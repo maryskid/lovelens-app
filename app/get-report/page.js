@@ -1,34 +1,46 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { recoleta } from '@/fonts/typo';
-import { useRouter } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { Lock, KeyRound, ArrowRight, AlertCircle, HelpCircle } from 'lucide-react';
 
 const Page = () => {
   const router = useRouter();
+  const searchParams = useSearchParams(); // Retrieve query parameters
   const [formData, setFormData] = useState({ code: '' });
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    // Prefill the input field with the `code` from query parameters, if available
+    const prefilledCode = searchParams.get("code") || '';
+    setFormData({ code: prefilledCode });
+  }, [searchParams]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    setErrorMessage('');
+    setErrorMessage(''); // Clear error message on input change
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
-    setTimeout(() => {
+    try {
+      // Simulate a backend call or replace with actual API request
       if (formData.code === '12345') {
-        router.push('/report');
+        router.push('/report'); // Redirect to the report page
       } else {
         setErrorMessage('Invalid code. Please try again.');
-        setIsLoading(false);
       }
-    }, 800);
+    } catch (error) {
+      console.error('Error verifying code:', error);
+      setErrorMessage('An unexpected error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
