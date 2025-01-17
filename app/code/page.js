@@ -1,31 +1,79 @@
 "use client";
 
-import React, { useState } from "react";
-import { useSearchParams } from "next/navigation";
+import React, { useState, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { recoleta } from "@/fonts/typo";
 import { Mail, Copy, Check, Sparkles, Share2, ArrowRight } from "lucide-react";
+import { useUser } from "@/context/UserContext";
+import Loading from "@/app/_components/Loading";
 
 const Page = () => {
-  const [copied, setCopied] = useState(false);
-  const searchParams = useSearchParams();
-  const uniqueCode = searchParams.get("uniqueCode") || "";
-  const firstName = searchParams.get("firstName") || "";
+  const [copied, setCopied] = useState(false); // Track whether the code has been copied
+  const [isValid, setIsValid] = useState(false); // Track if validation passes
+  const searchParams = useSearchParams(); // Access query parameters from the URL
+  const router = useRouter(); // Handle navigation
+  const { setUserData } = useUser(); // Access setUserData to clear user data
 
+  // Extract uniqueCode and firstName from query parameters
+  const uniqueCode = searchParams.get("uniqueCode");
+  const firstName = searchParams.get("firstName");
 
+  // Validate the uniqueCode and firstName when the page loads
+  useEffect(() => {
+    const validateAccess = async () => {
+      // Redirect if required query params are missing
+      if (!uniqueCode || !firstName) {
+        router.replace("/");
+        return;
+      }
+
+      try {
+        // Call the backend API to validate the code and first name
+        const response = await fetch("/api/access-code-page", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ uniqueCode, firstName }),
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.valid) {
+          setIsValid(true); // Allow access if validation passes
+          setUserData(null); // Clear user data to reset state
+        } else {
+          router.replace("/"); // Redirect if validation fails
+        }
+      } catch (error) {
+        console.error("Error validating code:", error); // Log any API errors
+        router.replace("/"); // Redirect on error
+      }
+    };
+
+    validateAccess();
+  }, [uniqueCode, firstName, router, setUserData]);
+
+  // Predefined message for email sharing
   const messagePreview = `Hey! I just completed the LoveLens relationship quiz and would love to see how our perspectives align. Here's my code to take your part: ${uniqueCode}`;
 
+  // Handle copying the unique code to the clipboard
   const handleCopyCode = () => {
     navigator.clipboard.writeText(uniqueCode);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setTimeout(() => setCopied(false), 2000); // Reset copied state after 2 seconds
   };
 
+  // Handle sharing the code via email
   const handleEmailClick = () => {
     const mailtoLink = `mailto:?subject=LoveLens Quiz Code&body=${encodeURIComponent(
       messagePreview
     )}`;
-    window.location.href = mailtoLink;
+    window.location.href = mailtoLink; // Open the user's email client with the prefilled message
   };
+
+  // Show loading indicator while validation is in progress
+  if (!isValid) {
+    return <Loading />;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#F8F4F2] via-[#FFF] to-[#F8F4F2] py-12 px-4 sm:px-6 lg:px-8">
@@ -51,9 +99,11 @@ const Page = () => {
           </div>
 
           <div className="flex items-center justify-center space-x-4 mb-8">
+            {/* Display the unique code */}
             <div className="bg-orange-50 px-6 py-4 rounded-lg border-2 border-orange-100 flex items-center justify-center text-center">
               <span className="text-2xl font-bold text-orange-600 tracking-wider">{uniqueCode}</span>
             </div>
+            {/* Copy button */}
             <button
               onClick={handleCopyCode}
               className="bg-primary hover:bg-orange-600 text-white px-6 py-4 rounded-lg transition-all duration-200 flex items-center space-x-2 shadow-md"
@@ -72,6 +122,7 @@ const Page = () => {
             </button>
           </div>
 
+          {/* Email sharing button */}
           <button
             onClick={handleEmailClick}
             className=" w-4/5 md:w-1/3 mx-auto bg-gradient-to-r from-primary to-orange-600 text-white py-4 rounded-xl font-semibold shadow-md hover:from-orange-600 hover:to-orange-700 transition-all duration-200 flex items-center justify-center space-x-3"

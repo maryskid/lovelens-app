@@ -29,11 +29,13 @@ const Page = () => {
     e.preventDefault();
     setIsLoading(true);
 
+    const code = formData.code.trim().replace(/\s*-\s*/g, "-").toUpperCase(); // Trim the code to remove any whitespace and convert to uppercase to match the generated code
+
     const userData = {
       firstName: formData.firstName,
       email: formData.email,
       gender: formData.gender,
-      code: formData.code,
+      code
     };
 
     try {
@@ -41,7 +43,7 @@ const Page = () => {
       const response = await fetch("/api/validate-code", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code: formData.code.trim().toUpperCase() }), // Trim the code to remove any whitespace and convert to uppercase to match the generated code
+        body: JSON.stringify({ code }), 
       });
 
       const result = await response.json();

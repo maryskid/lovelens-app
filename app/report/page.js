@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useEffect } from "react";
 import PersonalityTraits from "@/app/_components/PersonalityTraits";
 import ReportHeader from "@/app/_components/ReportHeader";
 import userResults from "@/app/_data/userResults";
@@ -8,11 +9,20 @@ import GrowthOpportunities from "@/app/_components/GrowthOpportunities";
 import NextChapterSection from "@/app/_components/NextChapterSection"; // Import the new section
 import usersTraits from "@/app/_data/usersTraits";
 import uniqueDynamicsText from "@/app/_data/uniqueDynamicsText";
+import { useUser } from "@/context/UserContext";
 
 const Page = () => {
   const { firstUser, secondUser, together } = usersTraits;
 
+  const { setUserData } = useUser(); // Use setUserData to clear user data
+
   const alignmentPercentage = 78;
+
+  // Clear userData when the page loads
+  useEffect(() => {
+    setUserData(null);
+  }, [setUserData]);
+  
 
   return (
     <div className="bg-gray-100">

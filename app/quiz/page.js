@@ -113,7 +113,7 @@ const Page = () => {
           router.push(`/code?uniqueCode=${data.sessionUniqueCode}&firstName=${encodeURIComponent(submissionData.userData.firstName)}`);
         } else {
           // Redirect to the quiz completion page for partners
-          router.push("/quiz-complete");
+          router.push("/report");
         }
      
       } else {
