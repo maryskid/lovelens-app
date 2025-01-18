@@ -63,8 +63,6 @@ export async function calculateTraitsForUser(sessionId, userId) {
       calculationMethod: "Average response values normalized to a -3 to 3 scale.",
     });
 
-    console.log({ description });
-
     // Store the calculated trait in the database
     const { error: insertError } = await supabase
       .from("individual_traits")
@@ -74,7 +72,8 @@ export async function calculateTraitsForUser(sessionId, userId) {
         trait_type_id: trait.id,
         start_value: startValue,
         end_value: endValue,
-        //description,
+        description,
+        ai_model: "gpt-4o-mini"
       });
 
     if (insertError) throw new Error(`Failed to store individual traits for ${trait.name}:`, insertError);

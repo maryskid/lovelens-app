@@ -1,10 +1,9 @@
-//import { Configuration, OpenAIApi } from "openai";
+import OpenAI from "openai";
 
-//const configuration = new Configuration({
-//  apiKey: process.env.OPENAI_API_KEY,
-//});
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
 
-//const openai = new OpenAIApi(configuration);
 
 export async function generateTraitDescription({
   traitName,
@@ -31,7 +30,7 @@ export async function generateTraitDescription({
   // Generate prompt
   const prompt = `
     You are a warm, insightful relationship psychologist who specializes in helping couples understand their unique dynamics.
-    Your expertise in the Big Five personality model helps partners appreciate their natural styles and grow together.
+    Your expertise in the Myers Briggs Type Indicator personality model helps partners appreciate their natural styles and grow together.
     
     ABOUT THE RELATIONSHIP ASSESSMENT
     Trait: ${traitName}
@@ -66,6 +65,7 @@ export async function generateTraitDescription({
     - Focus on relationship impact
     - Stay warm and encouraging
     - Let the narrative flow organically
+    - Tap  into the Myers Briggs Type Indicator model learnings
     - No meta-commentary, formatting, or questions
     - No headings or sections
     - No asterisks or formatting
@@ -74,14 +74,18 @@ export async function generateTraitDescription({
 
   try {
     // Generate the description using the OpenAI API
-    // const completion = await openai.createChatCompletion({
-    //   model: "gpt-4",
-    //   messages: [{ role: "user", content: prompt }],
-    // });
-    // return completion.data.choices[0].message.content.trim();
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+          {
+              role: "user",
+              content: prompt,
+          },
+      ],
+    });
+  
+    return completion.choices[0].message.content.trim();
 
-    // Return the prompt for testing purposes
-    return prompt;
   } catch (error) {
     console.error("Error generating AI description:", error);
     throw new Error("Failed to generate AI description.");
