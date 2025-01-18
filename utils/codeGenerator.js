@@ -1,5 +1,9 @@
 import supabase from "@/configs/supabaseClient";
-import { nanoid } from "nanoid";
+import { customAlphabet } from "nanoid";
+
+// Define a custom alphabet with only letters and numbers
+const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+const nanoid = customAlphabet(alphabet, 4); // Generate 4-character strings
 
 export async function generateUniqueCode() {
   let uniqueCode;
@@ -7,7 +11,7 @@ export async function generateUniqueCode() {
   let attempts = 0;
 
   while (!isUnique && attempts < 1000) { // Limit attempts to prevent infinite loops
-    uniqueCode = `LOVE-${nanoid(4).toUpperCase()}-${nanoid(4).toUpperCase()}`;
+    uniqueCode = `LOVE-${nanoid()}-${nanoid()}`;
 
     // Query the database to check for the unique_code
     const { data, error } = await supabase
