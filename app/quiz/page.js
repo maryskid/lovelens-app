@@ -149,7 +149,7 @@ const Page = () => {
 
         // Decide where to send the user after a successful submission.
         const redirectPath = submissionData.userData.code
-          ? "/report"
+          ? `/report?sessionId=${data.sessionId}`
           : `/code?uniqueCode=${data.sessionUniqueCode}&firstName=${encodeURIComponent(
               submissionData.userData.firstName
             )}`;

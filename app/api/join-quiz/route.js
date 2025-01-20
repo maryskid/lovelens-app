@@ -184,7 +184,8 @@ export async function POST(req) {
 
       // Return complete results
       return NextResponse.json({
-        success: true
+        success: true,
+        sessionId: session.id, // Include sessionId in the response
       });
     }
 

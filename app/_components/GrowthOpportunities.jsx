@@ -21,15 +21,16 @@ const GrowthOpportunities = ({ firstUser, secondUser, togetherOpportunity }) => 
           <div className="absolute top-0 right-0 w-24 h-24 bg-orange-50 rounded-bl-full opacity-50 -mr-8 -mt-8"></div>
           <div className="relative">
             <Image
-              src='/femenine.png'
-              alt='femenine icon'
+              src={firstUser.gender === 'male' ? '/masculine.png' : '/feminine.png'}
+              alt={firstUser.gender === 'male' ? 'Masculine icon' : 'Feminine icon'}
               width={60}
               height={60}
               className="w-6 h-6"
               style={{
                 maxWidth: "100%",
-                height: "auto"
-              }} />
+                height: "auto",
+              }}
+            />
             <h3 className="text-lg font-semibold text-orange-500 mb-2">For {firstUser.name}</h3>
             <p className="text-gray-700">{firstUser.growthOpportunity}</p>
           </div>
@@ -40,15 +41,16 @@ const GrowthOpportunities = ({ firstUser, secondUser, togetherOpportunity }) => 
           <div className="absolute top-0 right-0 w-24 h-24 bg-orange-50 rounded-bl-full opacity-50 -mr-8 -mt-8"></div>
           <div className="relative">
             <Image
-              src='/masculine.png'
-              alt='masculine icon'
+              src={secondUser.gender === 'male' ? '/masculine.png' : '/feminine.png'}
+              alt={secondUser.gender === 'male' ? 'Masculine icon' : 'Feminine icon'}
               width={60}
               height={60}
               className="w-6 h-6"
               style={{
                 maxWidth: "100%",
-                height: "auto"
-              }} />
+                height: "auto",
+              }}
+            />
             <h3 className="text-lg font-semibold text-orange-500 mb-2">For {secondUser.name}</h3>
             <p className="text-gray-700">{secondUser.growthOpportunity}</p>
           </div>
