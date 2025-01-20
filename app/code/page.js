@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { recoleta } from "@/fonts/typo";
 import { Mail, Copy, Check, Sparkles, Share2, ArrowRight } from "lucide-react";
 import { useUser } from "@/context/UserContext";
-import Loading from "@/app/_components/Loading";
+import SimpleLoading from "@/app/_components/SimpleLoading";
 
 const Page = () => {
   const [copied, setCopied] = useState(false); // Track whether the code has been copied
@@ -72,7 +72,7 @@ const Page = () => {
 
   // Show loading indicator while validation is in progress
   if (!isValid) {
-    return <Loading />;
+    return <SimpleLoading />;
   }
 
   return (
@@ -100,8 +100,8 @@ const Page = () => {
 
           <div className="flex items-center justify-center space-x-4 mb-8">
             {/* Display the unique code */}
-            <div className="bg-orange-50 px-6 py-4 rounded-lg border-2 border-orange-100 flex items-center justify-center text-center">
-              <span className="text-2xl font-bold text-orange-600 tracking-wider">{uniqueCode}</span>
+            <div className="bg-orange-50 p-2 md:p-3 rounded-lg border-2 border-orange-100 flex items-center justify-center text-center">
+              <span className="text-lg md:text-2xl font-bold text-orange-600 tracking-wider">{uniqueCode}</span>
             </div>
             {/* Copy button */}
             <button
