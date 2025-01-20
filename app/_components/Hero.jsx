@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import Image from 'next/image';
+import Image from "next/legacy/image";
 import { recoleta } from '@/fonts/typo';
 import { ArrowRight, Clock, Heart, Sparkles } from 'lucide-react';
 import HasPartnerTookTheTestModal from '@/app/_components/HasPartnerTookTheTestModal';

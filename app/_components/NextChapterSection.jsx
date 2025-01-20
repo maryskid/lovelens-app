@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Sparkles, ChevronRight, Heart, ChevronLeft } from "lucide-react";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import { recoleta } from "@/fonts/typo";
 
 const NextChapterSection = () => {

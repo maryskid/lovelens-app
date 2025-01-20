@@ -1,7 +1,7 @@
 import React from "react";
 import { recoleta } from "@/fonts/typo";
 import { Sprout, Users, ArrowUp } from "lucide-react";
-import Image from "next/image";
+import Image from "next/legacy/image";
 const GrowthOpportunities = ({ firstUser, secondUser, togetherOpportunity }) => {
   return (
     <div className="space-y-6 px-6 md:px-24 py-8">
