@@ -14,7 +14,7 @@ const Footer = () => {
               src="/lovelens-logo.png"
               alt="Lovelens Logo"
               width={120}
-              height={40}
+              height={120}
               className="w-auto h-auto"
             />
           </div>
