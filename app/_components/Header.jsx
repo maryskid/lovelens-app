@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/legacy/image";
+import Image from "next/image";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
@@ -27,7 +27,7 @@ export default function Header() {
   ];
 
   return (
-    <nav className="flex justify-between items-center px-6 py-4 md:px-24 md:py-6 relative bg-white shadow-sm">
+    (<nav className="flex justify-between items-center px-6 py-4 md:px-24 md:py-6 relative bg-white shadow-sm">
       {/* Logo */}
       <Image
         className="cursor-pointer"
@@ -36,8 +36,11 @@ export default function Header() {
         width={100}
         height={100}
         onClick={() => handleNavigation("/")}
-      />
-
+        style={{
+          maxWidth: "100%",
+          height: "auto",
+          width: "auto"
+        }} />
       {/* Navigation Links */}
       <div
         className={clsx(
@@ -60,7 +63,6 @@ export default function Header() {
           ))}
         </ul>
       </div>
-
       {/* Toggle Icon for Mobile */}
       <div className="md:hidden">
         {isOpen ? (
@@ -69,6 +71,6 @@ export default function Header() {
           <Menu className="cursor-pointer" size={28} onClick={toggleMenu} />
         )}
       </div>
-    </nav>
+    </nav>)
   );
 }

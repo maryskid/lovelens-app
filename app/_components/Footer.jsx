@@ -1,10 +1,10 @@
 import React from "react";
-import Image from "next/legacy/image";
+import Image from "next/image";
 import { guthenBloots, recoleta } from "@/fonts/typo";
 
 const Footer = () => {
   return (
-    <footer className="bg-black text-white py-12 px-6">
+    (<footer className="bg-black text-white py-12 px-6">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-12 md:gap-0">
         {/* Left Section */}
         <div className="space-y-4">
@@ -16,7 +16,11 @@ const Footer = () => {
               width={120}
               height={120}
               className="w-auto h-auto"
-            />
+              style={{
+                maxWidth: "100%",
+                height: "auto",
+                width: "auto"
+              }} />
           </div>
           <p className="text-gray-300 text-sm leading-relaxed">
             <span className={`${guthenBloots.className} italic text-lg text-white`}>
@@ -65,7 +69,6 @@ const Footer = () => {
           </div>
         </div>
       </div>
-
       {/* Bottom Section */}
       <div className="mt-8 border-t border-gray-600 pt-4 text-center md:text-left">
         <div className="flex flex-col md:flex-row md:justify-between items-center md:items-start space-y-4 md:space-y-0">
@@ -84,7 +87,7 @@ const Footer = () => {
           </ul>
         </div>
       </div>
-    </footer>
+    </footer>)
   );
 };
 

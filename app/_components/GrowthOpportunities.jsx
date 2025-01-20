@@ -1,10 +1,10 @@
 import React from "react";
 import { recoleta } from "@/fonts/typo";
 import { Sprout, Users, ArrowUp } from "lucide-react";
-import Image from "next/legacy/image";
+import Image from "next/image";
 const GrowthOpportunities = ({ firstUser, secondUser, togetherOpportunity }) => {
   return (
-    <div className="space-y-6 px-6 md:px-24 py-8">
+    (<div className="space-y-6 px-6 md:px-24 py-8">
       {/* Title Section */}
       <div className="flex items-center mb-6">
         <div className="w-8 h-8 flex items-center justify-center rounded-full bg-orange-100 text-orange-500 font-bold mr-4">
@@ -14,7 +14,6 @@ const GrowthOpportunities = ({ firstUser, secondUser, togetherOpportunity }) => 
           Growth Opportunities
         </h2>
       </div>
-
       {/* Cards Section */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Card for firstUser */}
@@ -27,7 +26,10 @@ const GrowthOpportunities = ({ firstUser, secondUser, togetherOpportunity }) => 
               width={60}
               height={60}
               className="w-6 h-6"
-            />
+              style={{
+                maxWidth: "100%",
+                height: "auto"
+              }} />
             <h3 className="text-lg font-semibold text-orange-500 mb-2">For {firstUser.name}</h3>
             <p className="text-gray-700">{firstUser.growthOpportunity}</p>
           </div>
@@ -43,7 +45,10 @@ const GrowthOpportunities = ({ firstUser, secondUser, togetherOpportunity }) => 
               width={60}
               height={60}
               className="w-6 h-6"
-            />
+              style={{
+                maxWidth: "100%",
+                height: "auto"
+              }} />
             <h3 className="text-lg font-semibold text-orange-500 mb-2">For {secondUser.name}</h3>
             <p className="text-gray-700">{secondUser.growthOpportunity}</p>
           </div>
@@ -59,13 +64,16 @@ const GrowthOpportunities = ({ firstUser, secondUser, togetherOpportunity }) => 
               width={60}
               height={60}
               className="w-8 h-8"
-            />
+              style={{
+                maxWidth: "100%",
+                height: "auto"
+              }} />
             <h3 className="text-lg font-semibold text-orange-500 mb-2">Together</h3>
             <p className="text-gray-700">{togetherOpportunity}</p>
           </div>
         </div>
       </div>
-    </div>
+    </div>)
   );
 };
 

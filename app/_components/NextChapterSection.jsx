@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Sparkles, ChevronRight, Heart, ChevronLeft } from "lucide-react";
-import Image from "next/legacy/image";
+import Image from "next/image";
 import { recoleta } from "@/fonts/typo";
 
 const NextChapterSection = () => {
@@ -36,7 +36,7 @@ const NextChapterSection = () => {
   ];
 
   return (
-    <section className="px-6 md:px-24 pt-8 pb-16">
+    (<section className="px-6 md:px-24 pt-8 pb-16">
       <div className="bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600 relative overflow-hidden rounded-2xl px-6 sm:px-12 py-12 shadow-xl">
         {/* Background Elements */}
         <div className="absolute inset-0 overflow-hidden">
@@ -93,7 +93,9 @@ const NextChapterSection = () => {
                           alt={image.alt}
                           fill
                           className="object-cover transform group-hover:scale-105 transition-transform duration-500"
-                        />
+                          style={{
+                            maxWidth: "100%"
+                          }} />
                       </div>
                     ))}
                   </div>
@@ -113,7 +115,9 @@ const NextChapterSection = () => {
                           alt={image.alt}
                           fill
                           className="object-cover transform group-hover:scale-105 transition-transform duration-500"
-                        />
+                          style={{
+                            maxWidth: "100%"
+                          }} />
                       </div>
                     ))}
                   </div>
@@ -152,7 +156,9 @@ const NextChapterSection = () => {
                           alt={image.alt}
                           fill
                           className="object-cover"
-                        />
+                          style={{
+                            maxWidth: "100%"
+                          }} />
                         <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/60 to-transparent
                           p-4 text-white text-center">
                           <p className="text-lg font-medium">{image.caption}</p>
@@ -193,7 +199,7 @@ const NextChapterSection = () => {
           </button>
         </div>
       </div>
-    </section>
+    </section>)
   );
 };
 

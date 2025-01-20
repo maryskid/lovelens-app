@@ -1,13 +1,12 @@
 import React from "react";
-import Image from "next/legacy/image";
+import Image from "next/image";
 import { guthenBloots, recoleta } from "@/fonts/typo";
 
 const ReportHeader = ({ firstUser, secondUser, alignmentPercentage }) => {
   return (
-    <section className="relative bg-[url('/couple-bg.jpg')] bg-cover bg-center py-24 md:py-24">
+    (<section className="relative bg-[url('/couple-bg.jpg')] bg-cover bg-center py-24 md:py-24">
       {/* Overlay */}
       <div className="absolute inset-0 bg-black bg-opacity-50 z-0"></div>
-
       <div className="container mx-auto px-6 md:px-12 relative z-10">
         <div className="flex flex-col items-center">
           {/* Name and Percentage */}
@@ -21,9 +20,9 @@ const ReportHeader = ({ firstUser, secondUser, alignmentPercentage }) => {
               <Image
                 src="/fancy-square.png"
                 alt="Alignment Percentage"
-                layout="fill"
                 className="object-contain"
-              />
+                fill
+                sizes="100vw" />
               <span
                 className={`${guthenBloots.className} absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-3xl md:text-5xl`}
               >
@@ -40,7 +39,6 @@ const ReportHeader = ({ firstUser, secondUser, alignmentPercentage }) => {
           </h2>
         </div>
       </div>
-
       {/* Bottom Curve */}
       <div className="absolute bottom-0 left-0 w-full overflow-hidden z-0">
         <svg
@@ -51,7 +49,7 @@ const ReportHeader = ({ firstUser, secondUser, alignmentPercentage }) => {
           <path d="M0,0 C480,120 960,120 1440,0 L1440,120 L0,120 Z" />
         </svg>
       </div>
-    </section>
+    </section>)
   );
 };
 

@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import Image from "next/legacy/image";
+import Image from "next/image";
 import { recoleta } from '@/fonts/typo';
 import { ArrowRight, Clock, Heart, Sparkles } from 'lucide-react';
 import HasPartnerTookTheTestModal from '@/app/_components/HasPartnerTookTheTestModal';
@@ -17,7 +17,7 @@ function Hero() {
   };
 
   return (
-    <div className="relative w-full">
+    (<div className="relative w-full">
       <div className="relative min-h-[600px] sm:min-h-[700px] lg:min-h-[800px]">
         {/* Background Image with Enhanced Overlay */}
         <Image
@@ -26,7 +26,9 @@ function Hero() {
           fill
           priority
           className="object-cover"
-        />
+          style={{
+            maxWidth: "100%"
+          }} />
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/70"></div>
 
         {/* Content */}
@@ -101,10 +103,9 @@ function Hero() {
           </svg>
         </div>
       </div>
-
       {/* Modal */}
       <HasPartnerTookTheTestModal isOpen={modalOpen} onClose={handleCloseModal} />
-    </div>
+    </div>)
   );
 }
 

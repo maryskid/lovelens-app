@@ -1,5 +1,5 @@
 import React from 'react';
-import Image from "next/legacy/image";
+import Image from "next/image";
 import { guthenBloots, recoleta } from '@/fonts/typo';
 
 const DiscoverSection = () => {
@@ -27,7 +27,7 @@ const DiscoverSection = () => {
   ];
 
   return (
-    <section className="bg-[#F8F4F2] py-24 px-6 md:px-12 overflow-hidden">
+    (<section className="bg-[#F8F4F2] py-24 px-6 md:px-12 overflow-hidden">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center relative mb-16">
@@ -64,13 +64,18 @@ const DiscoverSection = () => {
                   {/* Icon with Highlight */}
                   <div className="relative inline-block">
                     <div className="absolute inset-0 bg-primary/10 blur-xl transform scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    <Image 
-                      src={feature.icon} 
-                      alt={feature.title} 
-                      width={42} 
-                      height={42} 
+                    <Image
+                      src={feature.icon}
+                      alt={feature.title}
+                      width={42}
+                      height={42}
                       className="relative transform group-hover:scale-110 transition-transform duration-500"
-                    />
+                      style={{
+                        maxWidth: "100%",
+                        height: "auto",
+                        width: "auto"
+            
+                      }} />
                   </div>
 
                   {/* Text Content */}
@@ -88,7 +93,7 @@ const DiscoverSection = () => {
           </div>
         </div>
       </div>
-    </section>
+    </section>)
   );
 };
 

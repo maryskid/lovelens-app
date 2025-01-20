@@ -1,16 +1,15 @@
 import React from 'react';
-import Image from "next/legacy/image";
+import Image from "next/image";
 import { guthenBloots, recoleta } from '@/fonts/typo';
 
 const JourneySection = () => {
   return (
-    <section className="bg-white py-24 px-6 md:px-12 relative overflow-hidden">
+    (<section className="bg-white py-24 px-6 md:px-12 relative overflow-hidden">
       {/* Decorative Background */}
       <div className="absolute inset-0">
         <div className="absolute top-0 right-0 w-96 h-96 rounded-full blur-3xl -mr-48 -mt-48"></div>
         <div className="absolute bottom-0 left-0 w-72 h-72 rounded-full blur-3xl -ml-36 -mb-36"></div>
       </div>
-
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
         <div className="text-center mb-20">
@@ -43,7 +42,10 @@ const JourneySection = () => {
                     width={80}
                     height={80}
                     className="w-20 opacity-80"
-                  />
+                    style={{
+                      maxWidth: "100%",
+                      height: "auto"
+                    }} />
                 </div>
               )}
 
@@ -62,13 +64,16 @@ const JourneySection = () => {
                 <div className="mb-8 transform transition-transform duration-300 group-hover:scale-110">
                   <div className="relative inline-block">
                     <div className="absolute inset-0 bg-primary/10 blur-2xl transform scale-150 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    <Image 
-                      src={step.icon} 
-                      alt={step.title} 
-                      width={64} 
+                    <Image
+                      src={step.icon}
+                      alt={step.title}
+                      width={64}
                       height={64}
                       className="relative"
-                    />
+                      style={{
+                        maxWidth: "100%",
+                        height: "auto"
+                      }} />
                   </div>
                 </div>
 
@@ -84,7 +89,6 @@ const JourneySection = () => {
           ))}
         </div>
       </div>
-
       {/* Bottom Curve */}
       <div className="absolute bottom-0 left-0 w-full overflow-hidden">
         <div className="absolute bottom-0 left-0 w-full h-32 bg-white"></div>
@@ -92,7 +96,7 @@ const JourneySection = () => {
           <path d="M0,0 C480,120 960,120 1440,0 L1440,120 L0,120 Z" />
         </svg>
       </div>
-    </section>
+    </section>)
   );
 };
 

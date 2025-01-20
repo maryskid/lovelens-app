@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/legacy/image";
+import Image from "next/image";
 import { recoleta, guthenBloots } from "@/fonts/typo";
 
 const Page = () => {
@@ -64,7 +64,7 @@ const Page = () => {
   };
 
   return (
-    <div className="bg-gradient-to-b from-[#F8F4F2] via-[#FFF] to-[#F8F4F2] py-12 px-6 md:px-12">
+    (<div className="bg-gradient-to-b from-[#F8F4F2] via-[#FFF] to-[#F8F4F2] py-12 px-6 md:px-12">
       {/* Header */}
       <div className="text-center mb-12">
         <h1
@@ -76,7 +76,6 @@ const Page = () => {
           Select the reason that best describes your situation.
         </p>
       </div>
-
       {/* Reasons Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
         {reasons.map((reason, index) => (
@@ -98,7 +97,10 @@ const Page = () => {
               width={60}
               height={60}
               className="w-14 h-14"
-            />
+              style={{
+                maxWidth: "100%",
+                height: "auto"
+              }} />
             <h3
               className={`${recoleta.className} text-lg font-bold`}
               style={{ color: reason.color }}
@@ -109,7 +111,6 @@ const Page = () => {
           </div>
         ))}
       </div>
-
       {/* Action Button */}
       <div className="text-center mt-12">
         <button
@@ -122,7 +123,7 @@ const Page = () => {
           Continue
         </button>
       </div>
-    </div>
+    </div>)
   );
 };
 

@@ -1,10 +1,10 @@
 import React from "react";
-import Image from "next/legacy/image";
+import Image from "next/image";
 import { guthenBloots, recoleta } from "@/fonts/typo";
 
 const RelationshipSection = () => {
   return (
-    <section className="w-full max-w-full mx-auto px-6 py-16 overflow-hidden md:px-24">
+    (<section className="w-full max-w-full mx-auto px-6 py-16 overflow-hidden md:px-24">
       <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
         {/* Text Section */}
         <div className="flex-1 space-y-4 px-4">
@@ -17,7 +17,11 @@ const RelationshipSection = () => {
                 width={32}
                 height={32}
                 className="inline-block"
-              />
+                style={{
+                  maxWidth: "100%",
+                  height: "auto",
+                  width: "auto"
+                }} />
             </div>
 
             {/* Heading with Sparkles */}
@@ -34,7 +38,11 @@ const RelationshipSection = () => {
                   alt="Sparkles"
                   width={48}
                   height={48}
-                />
+                  style={{
+                    maxWidth: "100%",
+                    height: "auto",
+                    width: "auto"
+                  }} />
               </div>
             </div>
           </div>
@@ -61,14 +69,19 @@ const RelationshipSection = () => {
           <Image
             src="/funny-couple.png"
             alt="Couple showing different emotions"
-            width={500} // Set a larger width
-            height={500} // Maintain the aspect ratio
+            // Set a larger width
+            width={500}
+            // Maintain the aspect ratio
+            height={500}
             className="w-full h-auto object-cover"
             priority
-          />
+            style={{
+              maxWidth: "100%",
+              height: "auto"
+            }} />
         </div>
       </div>
-    </section>
+    </section>)
   );
 };
 
