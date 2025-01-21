@@ -7,13 +7,12 @@ import { Lock, KeyRound, ArrowRight, AlertCircle, HelpCircle } from 'lucide-reac
 
 const Page = () => {
   const router = useRouter();
-  const searchParams = useSearchParams(); // Retrieve query parameters
+  const searchParams = useSearchParams();
   const [formData, setFormData] = useState({ code: '' });
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    // Prefill the input field with the `code` from query parameters, if available
     const prefilledCode = searchParams.get("code") || '';
     setFormData({ code: prefilledCode });
   }, [searchParams]);
@@ -21,37 +20,49 @@ const Page = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    setErrorMessage(''); // Clear error message on input change
+    setErrorMessage('');
   };
 
   const handleSubmit = async (e) => {
+    if(!formData.code) {
+      return;
+    }
     e.preventDefault();
     setIsLoading(true);
-
+  
     try {
-      // Simulate a backend call or replace with actual API request
-      if (formData.code === '12345') {
-        router.push('/report'); // Redirect to the report page
-      } else {
-        setErrorMessage('Invalid code. Please try again.');
+      const code = formData.code.trim().replace(/\s*-\s*/g, "-").toUpperCase() //Normalize the code
+      const response = await fetch("/api/get-report", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ code }),
+      });
+  
+      if (!response.ok) {
+        const errorResponse = await response.json();
+        throw new Error(errorResponse.error || "Invalid code");
       }
+  
+      const { sessionId } = await response.json();
+      router.push(`/report?sessionId=${sessionId}`);
     } catch (error) {
-      console.error('Error verifying code:', error);
-      setErrorMessage('An unexpected error occurred. Please try again.');
+      console.error("Error validating code:", error);
+      setErrorMessage(error.message || "An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#F8F4F2] via-[#FFF] to-[#F8F4F2] flex flex-col items-center px-6 py-20 relative overflow-x-hidden">
-      {/* Decorative Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-orange-100 rounded-2xl opacity-20 blur-3xl -mr-48 -mt-48"></div>
         <div className="absolute bottom-0 left-0 w-72 h-72 bg-orange-100 rounded-2xl opacity-20 blur-3xl -ml-36 -mb-36"></div>
       </div>
 
-      {/* Header Section */}
       <div className="text-center mb-10 relative z-10">
         <div className="inline-block p-3 bg-orange-100 rounded-xl mb-4 transform transition-transform hover:scale-105">
           <Lock className="w-6 h-6 text-primary" />
@@ -64,7 +75,6 @@ const Page = () => {
         </p>
       </div>
 
-      {/* Form Section */}
       <div className="w-full max-w-md">
         <div className="bg-white rounded-xl shadow-xl p-8 relative z-10 border border-gray-100">
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -107,7 +117,6 @@ const Page = () => {
           </form>
         </div>
 
-        {/* Help Text */}
         <div className="mt-6 text-center">
           <div className="inline-flex items-center space-x-1 text-sm text-gray-600">
             <p>Your code was provided at the end of the quiz.</p>

@@ -1,6 +1,7 @@
 const firstUser = {
   name: "Sarah",
   avatar: "/female-emoji.png",
+  gender: "malse",
   traits: [
     {
       name: "Organizational Style",
@@ -73,6 +74,7 @@ const firstUser = {
 const secondUser = {
   name: "Thomas",
   avatar: "/male-emoji.png",
+  gender: "male",
   traits: [
     {
       name: "Organizational Style",

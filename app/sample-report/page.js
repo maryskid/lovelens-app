@@ -33,7 +33,6 @@ const Page = () => {
       />
       <PersonalityTraits firstUser={firstUser} secondUser={secondUser} />
       <Alignments userResults={userResults} />
-      <NextChapterSection />
       <UniqueDynamics uniqueDynamics={uniqueDynamicsText} />
       <GrowthOpportunities
         firstUser={firstUser}
