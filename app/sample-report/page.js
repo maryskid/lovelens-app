@@ -6,7 +6,6 @@ import userResults from "@/app/_data/userResults";
 import Alignments from "@/app/_components/Alignments";
 import UniqueDynamics from "@/app/_components/UniqueDynamics";
 import GrowthOpportunities from "@/app/_components/GrowthOpportunities";
-import NextChapterSection from "@/app/_components/NextChapterSection"; // Import the new section
 import usersTraits from "@/app/_data/usersTraits";
 import uniqueDynamicsText from "@/app/_data/uniqueDynamicsText";
 import { useUser } from "@/context/UserContext";
