@@ -81,7 +81,7 @@ const Page = () => {
             <div>
               <label className="block text-gray-700 font-medium mb-2 flex items-center">
                 <KeyRound className="w-4 h-4 mr-2 text-gray-400" />
-                Your Access Code
+                Your Unique Code
               </label>
               <input
                 type="text"
