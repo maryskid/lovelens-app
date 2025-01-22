@@ -5,7 +5,7 @@ const recoleta = localFont({
   display: 'swap' 
 });
 const modernEra = localFont({ 
-  src: './Modern-era-Regular.ttf', 
+  src: './modern-era-regular.ttf', 
   display: 'swap' 
 });
 const guthenBloots = localFont({ 
