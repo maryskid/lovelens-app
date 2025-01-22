@@ -57,7 +57,6 @@ const PersonalityCard = ({ person, isExpanded, onToggle, selectedTrait, onSelect
               )}
             </span>
           </h4>
-          {/*<p className="text-gray-600 leading-relaxed">{selectedTrait.description}</p>*/}
         </div>
       </div>
 

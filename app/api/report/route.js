@@ -30,7 +30,7 @@ export async function GET(req) {
     const { data: traitsData, error: traitsError } = await supabase
       .from("individual_traits")
       .select(
-        "user_id, trait_type_id, start_value, end_value, description, trait_types(name, spectrum_start, spectrum_end)"
+        "user_id, trait_type_id, start_value, end_value, trait_types(name, spectrum_start, spectrum_end)"
       )
       .eq("session_id", sessionId);
 
@@ -63,8 +63,7 @@ export async function GET(req) {
             value: trait.end_value,
             isDominant: trait.end_value > trait.start_value,
           },
-        },
-        description: trait.description,
+        }
       });
       return acc;
     }, {});

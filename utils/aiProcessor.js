@@ -4,41 +4,61 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-// Generate AI insights for the session
-export default async function generateAIInsights(context) {  
-  // Add error handling for alignments
+// Enhanced system prompts
+const SYSTEM_PROMPTS = {
+  category: `You are a deeply perceptive relationship psychologist with expertise in:
+- Attachment theory and relationship patterns
+- Evidence-based couple interventions
+- Practical relationship dynamics
+- Communication styles and conflict resolution
+
+
+Provide specific, actionable insights based on data patterns. Balance warmth with honesty, and ensure all feedback is grounded in the couple's actual responses.`,
+
+  overall: `You are a thoughtful and honest relationship expert specializing in:
+- Pattern recognition across relationship dimensions
+- Integration of psychological frameworks
+- Practical relationship enhancement strategies
+- Building on existing relationship strengths
+
+Provide realistic yet encouraging guidance based on concrete data patterns.`
+};
+
+// Validate context
+function validateContext(context) {
   if (!context.alignments || context.alignments.length === 0) {
-    console.error('No alignments found in context');
-    return { 
-      error: 'No alignments available',
-      categoryInsights: [],
-      overallInsights: null,
-      overallPrompt: ''
-    };
+    throw new Error('No alignments found in context');
   }
+  if (!context.profiles || context.profiles.length !== 2) {
+    throw new Error('Invalid profiles in context');
+  }
+}
 
-  const categoryPrompts = context.alignments.map((alignment) => {
-    // Ensure category has all necessary details
-    const category = {
-      categoryId: alignment.categoryId,
-      title: alignment.category.title || 'Unknown Category',
-      description: alignment.category.description || 'No description available',
-      questions: alignment.category.questions || []
-    };
-
-    return {
-      categoryId: category.categoryId,
-      categoryTitle: category.title,
-      prompt: createCategoryPrompt(
-        category,
-        alignment,
-        context.profiles[0],
-        context.profiles[1]
-      )
-    };
-  });
-
+// Generate AI insights
+export default async function generateAIInsights(context) {
   try {
+    validateContext(context);
+
+    const categoryPrompts = context.alignments.map((alignment) => {
+      const category = {
+        categoryId: alignment.categoryId,
+        title: alignment.category.title || 'Unknown Category',
+        description: alignment.category.description || 'No description available',
+        questions: alignment.category.questions || []
+      };
+
+      return {
+        categoryId: category.categoryId,
+        categoryTitle: category.title,
+        prompt: createEnhancedCategoryPrompt(
+          category,
+          alignment,
+          context.profiles[0],
+          context.profiles[1]
+        )
+      };
+    });
+
     const categoryInsights = await Promise.all(
       categoryPrompts.map(async (categoryPrompt) => {
         const categoryCompletion = await openai.chat.completions.create({
@@ -46,14 +66,14 @@ export default async function generateAIInsights(context) {
           messages: [
             {
               role: "system",
-              content: `You are a highly empathetic and insightful relationship psychologist. Your role is to help couples understand their dynamics, identify strengths, and offer thoughtful guidance to grow closer together.`
+              content: SYSTEM_PROMPTS.category
             },
             {
               role: "user",
               content: categoryPrompt.prompt
             }
           ],
-          temperature: 0.7,
+          temperature: 0,
           response_format: { type: "json_object" }
         });
 
@@ -66,22 +86,21 @@ export default async function generateAIInsights(context) {
       })
     );
 
-    // Create overall prompt
-    const overallPrompt = createOverallPrompt(context, categoryInsights);
+    const overallPrompt = createEnhancedOverallPrompt(context, categoryInsights);
 
     const overallCompletion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
         {
           role: "system",
-          content: `You are a relationship expert, tasked with providing comprehensive insights into a couple's dynamics. Your feedback should be warm, conversational, and deeply actionable.`
+          content: SYSTEM_PROMPTS.overall
         },
         {
           role: "user",
           content: overallPrompt
         }
       ],
-      temperature: 0.7,
+      temperature: 0,
       response_format: { type: "json_object" }
     });
 
@@ -92,8 +111,9 @@ export default async function generateAIInsights(context) {
       overallInsights,
       overallPrompt
     };
+
   } catch (error) {
-    console.error('Error generating overall insights:', error);
+    console.error('Error generating insights:', error);
     return {
       error: error.message,
       categoryInsights: [],
@@ -103,21 +123,32 @@ export default async function generateAIInsights(context) {
   }
 }
 
-// Create a prompt for category-specific insights
-function createCategoryPrompt(category, alignment, profile1, profile2) {
+function createEnhancedCategoryPrompt(category, alignment, profile1, profile2) {
+  const responseAnalysis = (category.questions || []).map(q => {
+    const diff = Math.abs(q.partner1Response - q.partner2Response);
+    const agreementLevel = diff <= 2 ? 'high' : diff <= 4 ? 'moderate' : 'low';
+    
+    return {
+      question: q.questionText,
+      alignment: agreementLevel,
+      patterns: interpretResponses(q.partner1Response, q.partner2Response, q)
+    };
+  });
+
   return `
-Imagine you're speaking directly to ${profile1.first_name} and ${profile2.first_name}, a couple seeking your guidance on their relationship. Their responses and alignment in the category "${category.title}" provide the following context:
+Analyze the relationship dynamic between ${profile1.first_name} and ${profile2.first_name} in "${category.title}".
 
 CATEGORY CONTEXT:
-- Description: ${category.description}
+${category.description}
 
-RESPONSE SPECTRUMS:
-${(category.questions || []).map((q) => `
-- "${q.questionText}" (Type: ${q.type})
-  Spectrum: ${q.spectrumStart} ↔ ${q.spectrumEnd}
-  - ${profile1.first_name}: ${q.partner1Response} (${interpretResponse(q.partner1Response)})
-  - ${profile2.first_name}: ${q.partner2Response} (${interpretResponse(q.partner2Response)})
-`).join("\n")}
+RESPONSE ANALYSIS:
+${category.questions.map((q) => `
+Question: "${q.questionText}" (Type: ${q.type})
+Spectrum: ${q.spectrumStart} ↔ ${q.spectrumEnd}
+- ${profile1.first_name}: ${q.partner1Response} (${interpretResponse(q.partner1Response)})
+- ${profile2.first_name}: ${q.partner2Response} (${interpretResponse(q.partner2Response)})
+Pattern: ${responseAnalysis.find(r => r.question === q.questionText)?.patterns?.summary || 'No pattern detected'}
+`).join('\n')}
 
 ALIGNMENT METRICS:
 - Overall Score: ${alignment.alignmentScore}%
@@ -125,126 +156,105 @@ ALIGNMENT METRICS:
 - Complementarity: ${alignment.types.complementarity}%
 - Balance: ${alignment.types.balance}%
 
-GUIDANCE TASK:
-1. Speak warmly and conversationally, addressing ${profile1.first_name} and ${profile2.first_name} directly.
-2. Provide an encouraging insight (50 words) about where they align in this category.
-3. Suggest one growth opportunity (50 words) to help them enhance their connection in this category.
-4. Recommend two actionable steps they can take immediately.
+TASKS:
+- Identify core relationship patterns from the data.
+- Connect patterns to specific relationship outcomes.
+- Provide actionable, evidence-based recommendations.
+- Consider both immediate and long-term improvements.
+- Balance warmth with honest feedback.
+- Highlight key strengths in this category (max 70 words), using concrete observations from their data.
+- Provide growth opportunities tailored to their shared dynamics.
+- Suggest specific, realistic steps they can implement immediately to improve.
+- Honestly describe their traits without sugarcoating.
+- Explain how their tendencies can impact their relationship positively or negatively.
+- Offer realistic and actionable advice for growth or adaptation.
+- Feel warm and compassionate but avoid over-positivity.
+- Leverage the user’s specific scores and response patterns.
 
-Output your response in JSON format:
+IMPORTANT!!!!!!: Output your response in JSON format also, speak directly to them like a human not like a robot:
 {
-  "alignmentStrengths": "Personalized insight about alignment strengths in this category.",
-  "growthOpportunities": "Personalized suggestion for growth in this category.",
-  "actionableRecommendations": ["Step 1", "Step 2"]
-}
-`;
+  "alignmentStrengths": "Key alignment strength in this category based on specific patterns.",
+  "growthOpportunities": "Specific growth opportunity supported by response data.",
+  "actionableRecommendations": [
+    "Concrete action step based on patterns",
+    "Evidence-based recommendation",
+    "Practical improvement strategy"
+  ]
+}`;
 }
 
-// Create a prompt for overall insights
-function createOverallPrompt(context, categoryInsights) {
-  // Organize all responses by category for comprehensive analysis
-  const categorizedResponses = context.responses.reduce((acc, response) => {
-    const categoryId = response.questions_reference.category_id;
-    if (!acc[categoryId]) {
-      acc[categoryId] = {
-        category: response.questions_reference.category,
-        questions: []
-      };
-    }
-    acc[categoryId].questions.push({
-      questionText: response.questions_reference.question_text,
-      type: response.questions_reference.type,
-      metadata: response.questions_reference.metadata,
-      responses: {
-        [context.profiles[0].id]: {
-          value: context.responses.find(r => 
-            r.user_id === context.profiles[0].id && 
-            r.question_id === response.question_id
-          )?.response_value,
-          interpretation: interpretResponse(
-            context.responses.find(r => 
-              r.user_id === context.profiles[0].id && 
-              r.question_id === response.question_id
-            )?.response_value
-          )
-        },
-        [context.profiles[1].id]: {
-          value: context.responses.find(r => 
-            r.user_id === context.profiles[1].id && 
-            r.question_id === response.question_id
-          )?.response_value,
-          interpretation: interpretResponse(
-            context.responses.find(r => 
-              r.user_id === context.profiles[1].id && 
-              r.question_id === response.question_id
-            )?.response_value
-          )
-        }
-      }
-    });
-    return acc;
-  }, {});
+function createEnhancedOverallPrompt(context, categoryInsights) {
+  const profile1 = context.profiles[0];
+  const profile2 = context.profiles[1];
 
   return `
-COMPREHENSIVE RELATIONSHIP ANALYSIS:
-Participants: ${context.profiles[0].first_name} (${context.profiles[0].gender}) and ${context.profiles[1].first_name} (${context.profiles[1].gender})
+Provide a comprehensive relationship assessment for ${profile1.first_name} (${profile1.gender}) and ${profile2.first_name} (${profile2.gender}).
+Base your insights on patterns across all categories and specific response data.
 
-PREVIOUS CATEGORY INSIGHTS:
+CATEGORY INSIGHTS:
 ${categoryInsights.map(insight => `
-Category ${insight.categoryId}: ${insight.categoryTitle}
-- Alignment Strengths: ${insight.alignmentStrengths}
-- Growth Opportunities: ${insight.growthOpportunities}
+Category: ${insight.categoryTitle}
+Strengths: ${insight.alignmentStrengths}
+Growth Areas: ${insight.growthOpportunities}
 `).join('\n')}
 
-DETAILED CATEGORY BREAKDOWN:
-${Object.entries(categorizedResponses).map(([categoryId, categoryData]) => `
-CATEGORY: ${categoryData.category.title}
-Description: ${categoryData.category.description}
-
-Detailed Questions Analysis:
-${categoryData.questions.map(q => `
-- Question: "${q.questionText}"
-  Type: ${q.type}
-  Spectrum: ${q.metadata?.spectrum_start || 'Start'} ↔ ${q.metadata?.spectrum_end || 'End'}
-  
-  Responses:
-  - ${context.profiles[0].first_name}: ${q.responses[context.profiles[0].id].value} (${q.responses[context.profiles[0].id].interpretation})
-  - ${context.profiles[1].first_name}: ${q.responses[context.profiles[1].id].value} (${q.responses[context.profiles[1].id].interpretation})
-`).join('\n')}
-`).join('\n\n')}
-
-OVERALL ALIGNMENT METRICS:
+ALIGNMENT PATTERNS:
 ${context.alignments.map((a) => `
-Category: ${a.category.title}
-- Overall Score: ${a.alignmentScore}%
+${a.category.title}:
+- Score: ${a.alignmentScore}%
 - Alignment: ${a.types.alignment}%
 - Complementarity: ${a.types.complementarity}%
 - Balance: ${a.types.balance}%
-`).join("\n")}
+`).join('\n')}
 
-GUIDANCE TASK:
-1. Speak directly to ${context.profiles[0].first_name} and ${context.profiles[1].first_name}.
-2. Highlight their unique dynamics as a couple (50 words).
-3. Provide an overall growth opportunity for ${context.profiles[0].first_name} (50 words).
-4. Provide an overall growth opportunity for ${context.profiles[1].first_name} (50 words).
-5. Suggest a shared growth opportunity for them as a couple (50 words).
+REQUIREMENTS:
+- Focus on actionable patterns and specific behaviors.
+- Connect insights to relationship outcomes.
+- Provide evidence-based recommendations.
+- Balance encouragement with realistic guidance.
+- Consider both individual and couple-level growth.
+- Speak directly to them with a respectful tone.
+- Highlight key strengths in this category (max 70 words), using concrete observations from their data.
+- Provide growth opportunities (max 70 words) tailored to their shared dynamics.
+- Suggest specific, realistic steps they can implement immediately to improve.
+- Honestly describe their traits without sugarcoating.
+- Explain how their tendencies can impact their relationship positively or negatively.
+- Offer realistic and actionable advice for growth or adaptation.
+- Feel warm and compassionate but avoid over-positivity.
+- Leverage the user’s specific scores and response patterns.
 
-Output your response in JSON format:
+IMPORTANT!!!!!!: Output your response in JSON format also, speak directly to them like a human not like a robot:
 {
-  "uniqueDynamics": "Insight about their unique dynamics as a couple.",
+  "uniqueDynamics": "Evidence-based summary of relationship patterns.",
   "individualGrowth": {
-    "${context.profiles[0].id}": "Growth opportunity for ${context.profiles[0].first_name}.",
-    "${context.profiles[1].id}": "Growth opportunity for ${context.profiles[1].first_name}."
+    "${profile1.id}": "Specific growth opportunity for ${profile1.first_name}.",
+    "${profile2.id}": "Specific growth opportunity for ${profile2.first_name}."
   },
-  "sharedGrowth": "Shared growth opportunity for ${context.profiles[0].first_name} and ${context.profiles[1].first_name}."
-}
-`;
+  "sharedGrowth": "Concrete shared growth opportunity based on patterns."
+}`;
 }
 
-// Helper function to interpret responses
+// Enhanced helper functions
+function interpretResponses(response1, response2, question) {
+  const diff = Math.abs(response1 - response2);
+  const sum = response1 + response2;
+  
+  return {
+    summary: diff <= 2 ? "Aligned perspective" :
+             diff <= 4 ? "Moderate difference" :
+             "Significant difference",
+    intensity: Math.abs(sum) <= 2 ? "Balanced" : "Strong",
+    direction: sum > 0 ? "Positive-leaning" : "Negative-leaning"
+  };
+}
+
 function interpretResponse(value) {
-  if (!value && value !== 0) return "No response";
-  if (value > 0) return "Tends towards the right spectrum";
-  if (value < 0) return "Tends towards the left spectrum";
-  return "Neutral/middle ground";
+  if (value === null || value === undefined) return "No response provided";
+  
+  const intensity = Math.abs(value);
+  const direction = value > 0 ? "positive" : "negative";
+  
+  if (intensity <= 2) return `Slight ${direction} tendency`;
+  if (intensity <= 4) return `Moderate ${direction} tendency`;
+  return `Strong ${direction} tendency`;
 }

@@ -1,17 +1,16 @@
 'use client'
-import React, { useState, useEffect } from "react";
-import { Heart, Sparkles, Glasses, Scale } from "lucide-react";
+import React, { useState, useEffect, memo } from "react";
+import { Heart, Sparkles, Glasses, Scale, Zap } from "lucide-react";
 import { recoleta, guthenBloots } from "@/fonts/typo";
 
-
-const CircularProgress = ({ progress, icon: Icon, status, text }) => {
-  const circumference = 2 * Math.PI * 40; // radius is 40
+// Memoize the CircularProgress component since it's used multiple times
+const CircularProgress = memo(({ progress, icon: Icon, status, text }) => {
+  const circumference = 2 * Math.PI * 40;
   const strokeDashoffset = circumference - (progress / 100) * circumference;
   
   return (
     <div className="flex flex-col items-center gap-4">
       <div className="relative w-24 h-24">
-        {/* Background circle */}
         <svg className="w-24 h-24 -rotate-90" viewBox="0 0 100 100">
           <circle
             className="text-gray-100"
@@ -22,9 +21,8 @@ const CircularProgress = ({ progress, icon: Icon, status, text }) => {
             cx="50"
             cy="50"
           />
-          {/* Progress circle */}
           <circle
-            className={`transition-all duration-1000 ease-in-out ${
+            className={`transition-all duration-700 ease-in-out ${
               status === 'completed' ? 'text-green-500' : 'text-primary'
             }`}
             strokeWidth="8"
@@ -39,14 +37,13 @@ const CircularProgress = ({ progress, icon: Icon, status, text }) => {
           />
         </svg>
         
-        {/* Icon container */}
-        <div className={`absolute inset-0 flex items-center justify-center transition-colors duration-700 ${
+        <div className={`absolute inset-0 flex items-center justify-center transition-colors duration-500 ${
           status === 'completed' ? 'text-green-500' : 
           status === 'active' ? 'text-primary' : 
           'text-gray-400'
         }`}>
           <Icon className={`w-8 h-8 ${
-            status === 'active' ? "animate-[pulse_2s_ease-in-out_infinite]" : ""
+            status === 'active' ? "animate-pulse" : ""
           }`} />
         </div>
       </div>
@@ -56,6 +53,32 @@ const CircularProgress = ({ progress, icon: Icon, status, text }) => {
       }`}>
         {text}
       </p>
+    </div>
+  );
+});
+
+// Quick process component for non-partner flow
+const QuickProcess = () => {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setProgress(prev => prev < 100 ? prev + 10 : prev);
+    }, 20);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <div className="flex flex-col items-center py-8">
+      <div className="mb-8">
+        <CircularProgress
+          progress={progress}
+          icon={Sparkles}
+          status={progress >= 100 ? 'completed' : 'active'}
+          text="Creating your unique connection code"
+        />
+      </div>
     </div>
   );
 };
@@ -74,26 +97,30 @@ const ProcessingResults = ({ isPartner }) => {
   });
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    setProgress(prev => ({ ...prev, step1: 'active' }));
-    setFillPercentage(prev => ({ ...prev, step1: 100 }));
+    if (isPartner) {
+      // Partner flow with full analysis
+      const timeline = [
+        { step: 'step1', delay: 0 },
+        { step: 'step2', delay: 3000 },
+        { step: 'step3', delay: 6000 }
+      ];
 
-    const step2Timer = setTimeout(() => {
-      setProgress(prev => ({ ...prev, step1: 'completed', step2: 'active' }));
-      setFillPercentage(prev => ({ ...prev, step2: 100 }));
-    }, 3000);
+      timeline.forEach(({ step, delay }) => {
+        const timer = setTimeout(() => {
+          setProgress(prev => ({
+            ...prev,
+            [step]: 'active',
+            [timeline[timeline.findIndex(t => t.step === step) - 1]?.step]: 'completed'
+          }));
+          setFillPercentage(prev => ({ ...prev, [step]: 100 }));
+        }, delay);
 
-    const step3Timer = setTimeout(() => {
-      setProgress(prev => ({ ...prev, step2: 'completed', step3: 'active' }));
-      setFillPercentage(prev => ({ ...prev, step3: 80 }));
-    }, 6000);
-
-    return () => {
-      clearTimeout(step2Timer);
-      clearTimeout(step3Timer);
-    };
-  }, []);
+        return () => clearTimeout(timer);
+      });
+    }
+  }, [isPartner]);
 
   const steps = [
     {
@@ -110,14 +137,14 @@ const ProcessingResults = ({ isPartner }) => {
     },
     {
       icon: Sparkles,
-      text: isPartner ? "Generating your couple insights" : "Preparing your unique code",
+      text: "Generating your couple insights",
       status: progress.step3,
       fill: fillPercentage.step3
     },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#F8F4F2] via-[#FFF] to-[#F8F4F2] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-b from-[#F8F4F2] via-white to-[#F8F4F2] flex items-center justify-center p-4">
       <div className="max-w-2xl w-full">
         <div className="bg-white rounded-3xl shadow-xl p-8 relative overflow-hidden">
           {/* Decorative Elements */}
@@ -129,9 +156,9 @@ const ProcessingResults = ({ isPartner }) => {
             <div className="text-center mb-12">
               <div className="w-20 h-20 bg-orange-100 rounded-full mx-auto mb-6 relative">
                 <Heart 
-                  className="w-10 h-10 text-primary absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-[pulse_3s_ease-in-out_infinite]" 
+                  className="w-10 h-10 text-primary absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-pulse" 
                 />
-                <div className="absolute inset-0 bg-orange-200 rounded-full animate-[ping_3s_ease-in-out_infinite] opacity-20" />
+                <div className="absolute inset-0 bg-orange-200 rounded-full animate-ping opacity-20" />
               </div>
               <h1 className={`${recoleta.className} text-3xl font-bold text-gray-800 mb-3`}>
                 {isPartner ? "Processing your results" : "Creating your connection"}
@@ -141,36 +168,36 @@ const ProcessingResults = ({ isPartner }) => {
               </div>
             </div>
 
-            {/* Circular Progress Steps */}
-            <div className="grid grid-cols-3 gap-4 mb-12">
-              {steps.map((step, index) => (
-                <CircularProgress
-                  key={index}
-                  progress={step.fill}
-                  icon={step.icon}
-                  status={step.status}
-                  text={step.text}
-                />
-              ))}
-            </div>
-
-            {/* Message */}
-            <div className="text-center text-gray-600">
-              <p className="mb-4">
-                {isPartner 
-                  ? "Your insights are being crafted with care" 
-                  : "Almost ready to share with your partner"}
-              </p>
-              <div className="flex justify-center gap-2">
-                {[...Array(3)].map((_, i) => (
-                  <div
-                    key={i}
-                    className="w-2 h-2 bg-primary rounded-full animate-bounce"
-                    style={{ animationDelay: `${i * 70}ms` }}
-                  />
-                ))}
-              </div>
-            </div>
+            {/* Conditional Rendering based on isPartner */}
+            {isPartner ? (
+              <>
+                <div className="grid grid-cols-3 gap-4 mb-12">
+                  {steps.map((step, index) => (
+                    <CircularProgress
+                      key={index}
+                      progress={step.fill}
+                      icon={step.icon}
+                      status={step.status}
+                      text={step.text}
+                    />
+                  ))}
+                </div>
+                <div className="text-center text-gray-600">
+                  <p className="mb-4">Your insights are being crafted with care</p>
+                  <div className="flex justify-center gap-2">
+                    {[...Array(3)].map((_, i) => (
+                      <div
+                        key={i}
+                        className="w-2 h-2 bg-primary rounded-full animate-bounce"
+                        style={{ animationDelay: `${i * 70}ms` }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </>
+            ) : (
+              <QuickProcess />
+            )}
           </div>
         </div>
       </div>
@@ -178,4 +205,5 @@ const ProcessingResults = ({ isPartner }) => {
   );
 };
 
+CircularProgress.displayName = 'CircularProgress';
 export default ProcessingResults;

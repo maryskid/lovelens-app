@@ -21,8 +21,8 @@ const GrowthOpportunities = ({ firstUser, secondUser, togetherOpportunity }) => 
           <div className="absolute top-0 right-0 w-24 h-24 bg-orange-50 rounded-bl-full opacity-50 -mr-8 -mt-8"></div>
           <div className="relative">
             <Image
-              src={firstUser.gender === 'male' ? '/masculine.png' : '/feminine.png'}
-              alt={firstUser.gender === 'male' ? 'Masculine icon' : 'Feminine icon'}
+              src={firstUser.gender === 'male' || firstUser.gender === 'other' ? '/masculine.png' : '/feminine.png'}
+              alt={firstUser.gender === 'male' || firstUser.gender === 'other' ? 'Masculine icon' : 'Feminine icon'}
               width={60}
               height={60}
               className="w-6 h-6"
@@ -41,8 +41,8 @@ const GrowthOpportunities = ({ firstUser, secondUser, togetherOpportunity }) => 
           <div className="absolute top-0 right-0 w-24 h-24 bg-orange-50 rounded-bl-full opacity-50 -mr-8 -mt-8"></div>
           <div className="relative">
             <Image
-              src={secondUser.gender === 'male' ? '/masculine.png' : '/feminine.png'}
-              alt={secondUser.gender === 'male' ? 'Masculine icon' : 'Feminine icon'}
+              src={secondUser.gender === 'male' || secondUser.gender === 'other' ? '/masculine.png' : '/feminine.png'}
+              alt={secondUser.gender === 'male' || secondUser.gender === 'other' ? 'Masculine icon' : 'Feminine icon'}
               width={60}
               height={60}
               className="w-6 h-6"
