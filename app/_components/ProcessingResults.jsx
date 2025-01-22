@@ -46,7 +46,7 @@ const CircularProgress = ({ progress, icon: Icon, status, text }) => {
           'text-gray-400'
         }`}>
           <Icon className={`w-8 h-8 ${
-            status === 'active' ? "animate-[pulse_3s_ease-in-out_infinite]" : ""
+            status === 'active' ? "animate-[pulse_2s_ease-in-out_infinite]" : ""
           }`} />
         </div>
       </div>
@@ -98,19 +98,19 @@ const ProcessingResults = ({ isPartner }) => {
   const steps = [
     {
       icon: Glasses,
-      text: "Analyzing Your Perspectives",
+      text: "Analyzing your perspectives",
       status: progress.step1,
       fill: fillPercentage.step1
     },
     {
       icon: Scale,
-      text: "Finding Connection Points",
+      text: "Finding connection points",
       status: progress.step2,
       fill: fillPercentage.step2
     },
     {
       icon: Sparkles,
-      text: isPartner ? "Generating Your Couple Insights" : "Preparing Your Code",
+      text: isPartner ? "Generating your couple insights" : "Preparing your unique code",
       status: progress.step3,
       fill: fillPercentage.step3
     },
@@ -134,7 +134,7 @@ const ProcessingResults = ({ isPartner }) => {
                 <div className="absolute inset-0 bg-orange-200 rounded-full animate-[ping_3s_ease-in-out_infinite] opacity-20" />
               </div>
               <h1 className={`${recoleta.className} text-3xl font-bold text-gray-800 mb-3`}>
-                {isPartner ? "Processing Your Results" : "Creating Your Connection"}
+                {isPartner ? "Processing your results" : "Creating your connection"}
               </h1>
               <div className={`${guthenBloots.className} text-primary/80`}>
                 Journey in Progress
@@ -166,7 +166,7 @@ const ProcessingResults = ({ isPartner }) => {
                   <div
                     key={i}
                     className="w-2 h-2 bg-primary rounded-full animate-bounce"
-                    style={{ animationDelay: `${i * 150}ms` }}
+                    style={{ animationDelay: `${i * 70}ms` }}
                   />
                 ))}
               </div>

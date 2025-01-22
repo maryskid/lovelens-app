@@ -84,7 +84,7 @@ const CategoryCard = ({
             <p className="text-sm font-bold" style={{ color }}>
               {alignmentPercentage}%
             </p>
-            <p className="text-xs text-gray-500">Aligned</p>
+            <p className="text-xs text-gray-500">Matching</p>
           </div>
         </div>
       </div>
