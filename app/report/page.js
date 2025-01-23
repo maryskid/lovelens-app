@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import PersonalityTraits from "@/app/_components/PersonalityTraits";
 import ReportHeader from "@/app/_components/ReportHeader";
 import Alignments from "@/app/_components/Alignments";
@@ -8,24 +8,35 @@ import UniqueDynamics from "@/app/_components/UniqueDynamics";
 import GrowthOpportunities from "@/app/_components/GrowthOpportunities";
 import NextChapterSection from "@/app/_components/NextChapterSection";
 import { useUser } from "@/context/UserContext";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import SimpleLoading from "@/app/_components/SimpleLoading";
-import { useRouter } from "next/navigation";
 
+/** 
+ * 1) Top-level component that wraps the inner component in <Suspense>
+ */
+export default function Page() {
+  return (
+    <Suspense fallback={<SimpleLoading />}>
+      <ReportPage />
+    </Suspense>
+  );
+}
 
-const Page = () => {
+/**
+ * 2) Inner component that actually uses useSearchParams
+ */
+function ReportPage() {
   const [reportData, setReportData] = useState(null);
   const { setUserData } = useUser();
-  const searchParams = useSearchParams(); // Access query parameters from the URL
-  const sessionId = searchParams.get("sessionId"); // Extract sessionId from query parameters
+  const searchParams = useSearchParams();
+  const sessionId = searchParams.get("sessionId");
   const router = useRouter();
-
 
   useEffect(() => {
     setUserData(null); // Clear user data on load
 
     const fetchReportData = async () => {
-      if(!sessionId) {
+      if (!sessionId) {
         return router.replace("/");
       }
       try {
@@ -42,7 +53,7 @@ const Page = () => {
     };
 
     fetchReportData();
-  }, [sessionId, setUserData]);
+  }, [sessionId, setUserData, router]);
 
   if (!reportData) {
     return <SimpleLoading />; // Show a loading state
@@ -56,7 +67,9 @@ const Page = () => {
         firstUser={firstUser}
         secondUser={secondUser}
         alignmentPercentage={
-          Math.round(alignments.reduce((sum, a) => sum + a.alignmentPercentage, 0) / alignments.length)
+          Math.round(
+            alignments.reduce((sum, a) => sum + a.alignmentPercentage, 0) / alignments.length
+          )
         }
       />
       <PersonalityTraits firstUser={firstUser} secondUser={secondUser} />
@@ -70,6 +83,4 @@ const Page = () => {
       />
     </div>
   );
-};
-
-export default Page;
+}

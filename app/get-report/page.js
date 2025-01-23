@@ -1,11 +1,25 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { recoleta } from '@/fonts/typo';
+import React, { Suspense, useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
+import { recoleta } from '@/fonts/typo';
 import { Lock, KeyRound, ArrowRight, AlertCircle, HelpCircle } from 'lucide-react';
+import SimpleLoading from '@/app/_components/SimpleLoading';
+/** 
+ * 1) Top-level component wrapping the inner component with <Suspense>
+ */
+export default function Page() {
+  return (
+    <Suspense fallback={<SimpleLoading />}>
+      <AccessPage />
+    </Suspense>
+  );
+}
 
-const Page = () => {
+/**
+ * 2) Inner component where we actually use `useSearchParams`
+ */
+function AccessPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [formData, setFormData] = useState({ code: '' });
@@ -13,7 +27,7 @@ const Page = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const prefilledCode = searchParams.get("code") || '';
+    const prefilledCode = searchParams.get('code') || '';
     setFormData({ code: prefilledCode });
   }, [searchParams]);
 
@@ -31,7 +45,7 @@ const Page = () => {
     setIsLoading(true);
   
     try {
-      const code = formData.code.trim().replace(/\s*-\s*/g, "-").toUpperCase() //Normalize the code
+      const code = formData.code.trim().replace(/\s*-\s*/g, "-").toUpperCase();
       const response = await fetch("/api/get-report", {
         method: "POST",
         headers: {
@@ -55,7 +69,6 @@ const Page = () => {
     }
   };
   
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#F8F4F2] via-[#FFF] to-[#F8F4F2] flex flex-col items-center px-6 py-20 relative overflow-x-hidden">
       <div className="absolute inset-0 overflow-hidden">
@@ -129,6 +142,4 @@ const Page = () => {
       </div>
     </div>
   );
-};
-
-export default Page;
+}
